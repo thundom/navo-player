@@ -1,11 +1,11 @@
-# Subtitle Studio 许可协议 / License Agreement
+# 边播边译 Navo Player 许可协议 / License Agreement
 
-版权所有 © 2026 Subtitle Studio 作者。保留所有权利。
-Copyright © 2026 the Subtitle Studio author. All rights reserved.
+版权所有 © 2026 边播边译 Navo Player 作者。保留所有权利。
+Copyright © 2026 the Navo Player author. All rights reserved.
 
 ## 中文
 
-本协议适用于「边播边译 Subtitle Studio」桌面程序、Emby 插件「AI 字幕生成」及其安装包（以下统称"本软件"）。
+本协议适用于「边播边译 Navo Player」桌面程序（曾用名 Subtitle Studio）、Emby 插件「AI 字幕生成」及其安装包（以下统称"本软件"）。
 
 **允许：**
 
@@ -27,7 +27,7 @@ Copyright © 2026 the Subtitle Studio author. All rights reserved.
 
 ## English
 
-This agreement covers the Subtitle Studio desktop application, the "AI Subtitles" Emby plugin and their installers (the "Software").
+This agreement covers the Navo Player desktop application (formerly Subtitle Studio), the "AI Subtitles" Emby plugin and their installers (the "Software").
 
 **You may:**
 

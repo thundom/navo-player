@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Subtitle Studio · 边播边译</title>
-<meta name="description" content="Watch any video with live AI subtitles in your language — speech recognition and translation run on your own PC. Free for personal use.">
-<meta property="og:title" content="Subtitle Studio · 边播边译">
+<title>边播边译 · Navo Player</title>
+<meta name="description" content="Navo Player — the player that generates subtitles in real time. Watch any video with live AI subtitles in your language — speech recognition and translation run on your own PC. Free for personal use.">
+<meta property="og:title" content="Navo Player · The player that generates subtitles in real time">
 <meta property="og:description" content="Live AI subtitles for any video, translated while it plays. Runs locally, no subscription.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235b5bf7'/%3E%3Cpath d='M18 40h28M22 48h20' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M26 16l14 9-14 9z' fill='white'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -223,6 +223,62 @@ footer { margin-top: 110px; padding: 40px 0 50px; border-top: 1px solid var(--li
 footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 30px; justify-content: space-between; }
 footer a:hover { color: var(--fg); }
 
+
+/* ---------- v1.5 播放器（仿 PotPlayer）---------- */
+.ptitle { height: 34px; background: #1c1c20; display: flex; align-items: center; font-size: 12.5px; color: #aaa; border-bottom: 1px solid #000; }
+.papp { display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #eee; height: 100%; }
+.papp b { font-weight: 700; }
+.papp em { font-style: normal; color: #888; font-size: 11px; margin-top: -3px; }
+.plogo { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, #7c6cff, #22d3a6); position: relative; display: inline-block; }
+.plogo::after { content: ""; position: absolute; left: 7px; top: 4px; border-left: 6px solid #fff; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+.pname { flex: 1; text-align: center; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pwin { display: flex; height: 100%; }
+.pwin .w { width: 40px; height: 100%; display: grid; place-items: center; color: #ccc; }
+.pwin .w svg { width: 13px; height: 13px; }
+.pwin .w:hover { background: #2e2e36; }
+.pwin .w.x:hover { background: #e81123; color: #fff; }
+.player .bottom { background: #1c1c20; padding: 8px 12px 6px; }
+.seekrow { display: flex; align-items: center; gap: 14px; }
+.seekrow .seek { flex: 1; height: 5px; border-radius: 3px; }
+.seekrow .seek .head { top: -4px; width: 13px; height: 13px; margin-left: -6px; }
+.vol { display: flex; align-items: center; gap: 6px; color: #ccc; }
+.vol svg { width: 15px; height: 15px; fill: currentColor; }
+.vbar { width: 70px; height: 2px; background: #555; position: relative; display: inline-block; }
+.vbar i { position: absolute; left: 0; top: 0; bottom: 0; width: 60%; background: #ffcf48; }
+.vbar i::after { content: ""; position: absolute; right: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
+.player .ctrl { display: flex; align-items: center; gap: 2px; margin-top: 6px; font-size: 12px; color: #ddd; }
+.ico { width: 34px; height: 30px; display: grid; place-items: center; color: #d6d6dc; border-radius: 6px; }
+.ico svg { width: 16px; height: 16px; fill: currentColor; }
+.ico svg[fill="none"] { fill: none; }
+.ico.big svg { width: 19px; height: 19px; }
+.ico:hover { background: #30303a; }
+.ico.on { color: #ffcf48; }
+.player .ctrl .time { margin-left: 14px; font-family: Consolas, monospace; color: #eee; }
+.player .ctrl .buf { margin-left: 10px; color: #6ff0a8; }
+.player .ctrl .right { margin-left: auto; display: flex; align-items: center; gap: 2px; }
+.spd { font-size: 12px; color: #ffcf48; padding: 0 8px; }
+
+/* ---------- 面板演示 ---------- */
+.panels { position: relative; min-height: 430px; }
+.pnl { position: absolute; width: 330px; background: #1e1e24; border: 1px solid rgba(255,255,255,.1); border-radius: 12px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.85); overflow: hidden; font-size: 13px; }
+.pnl .ph { height: 30px; background: #15151a; color: #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 12px; }
+.pnl .ph i { width: 16px; height: 16px; border-radius: 3px; background: #c42b1c; display: inline-block; }
+.pnl .tabs { display: flex; gap: 6px; padding: 9px 10px; background: #26262e; flex-wrap: wrap; }
+.pnl .tabs span { padding: 4px 10px; border-radius: 5px; background: #36363f; color: #ddd; font-size: 12px; }
+.pnl .tabs span.on, .pnl .opts span.on { background: #2ecc71; color: #000; }
+.pnl .rowp { display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 8px; padding: 6px 12px; color: #9a9aa8; }
+.pnl .opts { display: flex; gap: 5px; flex-wrap: wrap; }
+.pnl .opts span { padding: 4px 9px; border-radius: 5px; background: #36363f; color: #ddd; font-size: 12px; }
+.pnl .sl { height: 2px; background: #555; position: relative; }
+.pnl .sl i { position: absolute; left: 0; top: 0; bottom: 0; background: #2ecc71; }
+.pnl .sl i::after { content: ""; position: absolute; right: -5px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
+.pnl .prev { margin: 10px 12px; height: 92px; border-radius: 6px; background: linear-gradient(#34507a, #10141f); display: flex; flex-direction: column; justify-content: flex-start; align-items: center; padding-top: 12px; }
+.pnl .prev b { color: #ffe066; font-size: 20px; font-weight: 800; text-shadow: 0 2px 0 #000, 2px 0 0 #000, -2px 0 0 #000, 0 -2px 0 #000; }
+.pnl .prev small { color: #fff; font-size: 12px; margin-top: 3px; text-shadow: 0 1px 2px #000; }
+.pnl.a { left: 0; top: 0; z-index: 2; }
+.pnl.b { right: 0; top: 120px; z-index: 1; }
+@media (max-width: 900px) { .pnl { position: relative; width: auto; } .pnl.b { top: 0; margin-top: 16px; } .panels { min-height: 0; } }
+
 /* 出现动画 */
 .reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
 .reveal.in { opacity: 1; transform: none; }
@@ -252,7 +308,7 @@ footer a:hover { color: var(--fg); }
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.4 新增：播放列表 · 收藏 · 画质增强 · 去黑边</span></div>
+    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.5 全新界面：仿 PotPlayer 极简设计 · 秒播 · 字幕样式随心调 · 智能高清</span></div>
     <h1 class="reveal"><span data-i18n="hero.t1">任何视频，</span><br><span class="grad" data-i18n="hero.t2">边播边出母语字幕</span></h1>
     <p class="sub reveal" data-i18n="hero.sub">打开视频就能看：本机 AI 一边听台词、一边翻译成中文字幕，提前缓冲 3 分钟。不用上传、不用订阅、没有网络也能用。</p>
     <div class="cta reveal">
@@ -268,15 +324,10 @@ footer a:hover { color: var(--fg); }
 
     <div class="stage reveal">
       <div class="player" id="demo">
-        <div class="titlebar"><i></i><i></i><i></i>&nbsp; <span data-i18n="demo.title">晚风.mkv · 边播边译</span></div>
-        <div class="toolbar">
-          <div class="tb">📂 <span data-i18n="demo.open">&nbsp;打开</span></div>
-          <div class="tb hide-m" data-i18n="demo.target">翻译成 简体中文</div>
-          <div class="tb hide-m">💬 <span data-i18n="demo.subs">&nbsp;字幕：显示</span></div>
-          <div class="tb on" data-i18n="demo.bi">双语</div>
-          <div class="tb hide-m" data-i18n="demo.tr">译文</div>
-          <div class="tb sp fav" data-i18n="demo.fav">★ 已收藏</div>
-          <div class="tb hide-m" data-i18n="demo.list">☰ 列表</div>
+        <div class="ptitle">
+          <span class="papp"><i class="plogo"></i><b data-i18n="brand">边播边译</b><em>⌄</em></span>
+          <span class="pname" data-i18n="demo.title">晚风.mkv · 边播边译</span>
+          <span class="pwin"><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8M9.5 3v7l-4 4h13l-4-4V3M12 14v7"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 13h14"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5.5" y="5.5" width="13" height="13"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg></span><span class="w x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span></span>
         </div>
         <div class="screen">
           <div class="scene" id="scene">
@@ -289,13 +340,15 @@ footer a:hover { color: var(--fg); }
           <div class="subs"><div class="tr" id="subTr"></div><div class="or" id="subOr"></div></div>
         </div>
         <div class="bottom">
-          <div class="seek"><div class="rec" id="segRec"></div><div class="trn" id="segTr"></div><div class="head" id="head"></div></div>
+          <div class="seekrow">
+            <div class="seek"><div class="rec" id="segRec"></div><div class="trn" id="segTr"></div><div class="head" id="head"></div></div>
+            <span class="vol"><svg viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><i class="vbar"><i></i></i></span>
+          </div>
           <div class="ctrl">
-            <div class="tb">⏸</div><div class="tb hide-m">⏮</div><div class="tb hide-m">⏭</div>
+            <span class="ico big"><svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg></span><span class="ico hide-m"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/></svg></span><span class="ico hide-m"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="2.6" height="14"/><path d="M19 5 9 12l10 7z"/></svg></span><span class="ico hide-m"><svg viewBox="0 0 24 24"><rect x="16.4" y="5" width="2.6" height="14"/><path d="M5 5l10 7-10 7z"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 5l8 9H4z"/><rect x="4" y="16.5" width="16" height="2.6"/></svg></span>
             <span class="time" id="time">0:12:04 / 1:52:30</span>
-            <span class="legend hide-m"><span><i style="background:var(--rec)"></i><span data-i18n="demo.rec">已识别</span></span><span><i style="background:var(--tr)"></i><span data-i18n="demo.trd">已翻译</span></span></span>
-            <span class="buf" id="buf"></span>
-            <span style="margin-left:auto" class="tb hide-m">1.25×</span><span>🔊</span><div class="tb" data-i18n="demo.full">⛶ 全屏</div>
+            <span class="buf hide-m" id="buf"></span>
+            <span class="right"><span class="spd hide-m">1.25×</span><span class="ico on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M6.5 10.5h5M14 10.5h3.5M6.5 14.5h3M12 14.5h5.5"/></svg></span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="16" cy="6" r="2.4" fill="currentColor"/><circle cx="8" cy="12" r="2.4" fill="currentColor"/><circle cx="13.5" cy="18" r="2.4" fill="currentColor"/></svg></span><span class="ico hide-m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h8"/><path d="M15 15l6 3.5-6 3.5z" fill="currentColor" stroke="none"/></svg></span><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></span>
           </div>
         </div>
       </div>
@@ -303,7 +356,7 @@ footer a:hover { color: var(--fg); }
 
     <div class="stats reveal">
       <div><b>15–40×</b><span data-i18n="stats.1">显卡识别速度（实时倍数）</span></div>
-      <div><b>~3s</b><span data-i18n="stats.2">打开视频到出第一句字幕</span></div>
+      <div><b>~1s</b><span data-i18n="stats.2">秒播：打开视频到出第一句字幕</span></div>
       <div><b>3 min</b><span data-i18n="stats.3">提前缓冲，拖动也不用等</span></div>
       <div><b>0 ¥</b><span data-i18n="stats.4">不订阅、不按分钟收费</span></div>
     </div>
@@ -317,14 +370,16 @@ footer a:hover { color: var(--fg); }
     <p class="lead reveal" data-i18n="f.lead">日剧、韩综、美剧、纪录片、网课、家庭录像……没有字幕的视频，打开就有。</p>
     <div class="grid">
       <div class="card wide reveal"><div class="ic">⚡</div><h3 data-i18n="f.1t">边播边译，开头几秒就出字幕</h3><p data-i18n="f.1d">本地文件可以提前读取后面的音频，所以不用质量差的"实时流式识别"：每次听 40 秒、在静音处断句、马上翻译，在播放位置前保持约 3 分钟缓冲。进度条上灰蓝色 = 已识别，绿色 = 已翻译，一目了然。</p></div>
+      <div class="card reveal"><div class="ic">🚀</div><h3 data-i18n="f.10t">秒播，字幕随后赶上</h3><p data-i18n="f.10d">打开视频立刻播放，不用等 AI；识别引擎在后台加载，先识别画面附近的一小段，第一句字幕约 1 秒就出来。</p></div>
+      <div class="card reveal"><div class="ic">🎨</div><h3 data-i18n="f.11t">字幕想怎么显示就怎么显示</h3><p data-i18n="f.11d">字体、字号、颜色、描边、阴影、半透明背景框，4 个模板一键套用；字幕可以上下移动，避开片子里的硬字幕。</p></div>
       <div class="card reveal"><div class="ic">🔒</div><h3 data-i18n="f.2t">全部在你的电脑上完成</h3><p data-i18n="f.2d">语音识别（whisper.cpp）和翻译（腾讯混元 Hy-MT2）都跑在本机。视频不上传，没有账号，断网也能用。</p></div>
       <div class="card reveal"><div class="ic">🌏</div><h3 data-i18n="f.3t">十几种语言 → 中 / 英</h3><p data-i18n="f.3d">只听音频自动判断语言。英、日、韩、法、德、西、俄、泰、越……可以设定哪些语言要翻译、翻译成简体 / 繁体 / 英文。</p></div>
       <div class="card reveal"><div class="ic">🎚️</div><h3 data-i18n="f.4t">双语 / 译文 / 原文，一键切换</h3><p data-i18n="f.4d">译文下面带一行小字原文，学外语也好用。字号、显示隐藏、字幕旋转都能单独调，长句自动换行。</p></div>
       <div class="card reveal"><div class="ic">📁</div><h3 data-i18n="f.5t">整个文件夹批量生成</h3><p data-i18n="f.5d">勾选、排序、断点续做，关机下次接着来。在文件夹上右键就能开始，生成的 .srt 任何播放器、Emby、Plex 都能用。</p></div>
       <div class="card reveal"><div class="ic">💾</div><h3 data-i18n="f.6t">做过的字幕永久复用</h3><p data-i18n="f.6d">看到一半关掉也会保存，下次从上次的位置和进度继续。旁边已经有中文字幕的视频直接使用，不重复识别。</p></div>
-      <div class="card reveal"><div class="ic">🎬</div><h3 data-i18n="f.7t">画质增强与去黑边</h3><p data-i18n="f.7d">普通 / 鲜艳 / 电影 / 游戏预设，智能高清锐化，亮度对比度饱和度微调，自动裁掉画面里的黑边，常用比例一键切换。</p></div>
+      <div class="card reveal"><div class="ic">🎬</div><h3 data-i18n="f.7t">智能高清与去黑边</h3><p data-i18n="f.7d">显卡自适应锐化三档可调，细节立刻清楚；普通 / 鲜艳 / 电影 / 游戏模板，亮度对比度饱和度色调微调；自动裁掉画面里的黑边。</p></div>
       <div class="card reveal"><div class="ic">⭐</div><h3 data-i18n="f.8t">播放列表 · 历史 · 收藏</h3><p data-i18n="f.8d">拖进文件夹就是播放列表，播完自动下一个；播放历史记得看到哪；喜欢的视频一键收藏。</p></div>
-      <div class="card reveal"><div class="ic">🖱️</div><h3 data-i18n="f.9t">顺手的小细节</h3><p data-i18n="f.9d">按住画面任意处拖动窗口、双击暂停、右键菜单、0.5×–3× 变速、点喇叭静音、超长文件名、资源管理器右键菜单、中 / 繁 / 英 / 日界面。</p></div>
+      <div class="card reveal"><div class="ic">🖱️</div><h3 data-i18n="f.9t">像 PotPlayer 一样顺手</h3><p data-i18n="f.9d">极简深色界面，按住任意处拖窗口、双击暂停、滚轮调音量（最高 200%）、对白增强、A-B 循环、截图、逐帧、置顶、超长文件名，中 / 繁 / 英 / 日界面。</p></div>
     </div>
   </div>
 </section>
@@ -342,42 +397,33 @@ footer a:hover { color: var(--fg); }
 
     <div class="split">
       <div class="reveal">
-        <div class="eyebrow" data-i18n="q.eyebrow">右键菜单</div>
-        <h2 data-i18n="q.title">画面、速度、比例，右键全搞定</h2>
+        <div class="eyebrow" data-i18n="q.eyebrow">字幕 · 视频 面板</div>
+        <h2 data-i18n="q.title">两个按钮，管好字幕和画面</h2>
         <ul class="ticks">
-          <li><span data-i18n-html="q.1"><b>画质预设</b>：普通、鲜艳、电影、游戏，另可单独调亮度 / 对比度 / 饱和度 / 伽马</span></li>
-          <li><span data-i18n-html="q.2"><b>智能高清</b>：高质量缩放 + 去色带 + 自适应锐化，老片、低清片明显更清楚</span></li>
-          <li><span data-i18n-html="q.3"><b>去黑边</b>：自动识别压在画面里的宽银幕黑条并裁掉</span></li>
-          <li><span data-i18n-html="q.4"><b>画面比例</b>：原始 / 16:9 / 4:3 / 21:9 / 2.35:1……适应、裁剪或拉伸填满窗口，窗口也能锁定视频比例</span></li>
-          <li><span data-i18n-html="q.5"><b>播放速度</b>：0.5× 到 3×，<kbd>[</kbd> <kbd>]</kbd> 微调</span></li>
+          <li><span data-i18n-html="q.1"><b>字幕外观</b>：字体、字号、颜色、描边、背景框，4 个模板，实时预览</span></li>
+          <li><span data-i18n-html="q.2"><b>字幕位置</b>：上下随意移动，避开片子里的硬字幕（Ctrl+↑ / ↓）</span></li>
+          <li><span data-i18n-html="q.3"><b>智能高清</b>：显卡自适应锐化，低 / 中 / 高三档，硬件解码时也能用</span></li>
+          <li><span data-i18n-html="q.4"><b>画面</b>：去黑边、常用比例、缩放、翻转，窗口锁定视频比例、置顶</span></li>
+          <li><span data-i18n-html="q.5"><b>播放与声音</b>：0.5×–3× 变速、A-B 循环、截图、逐帧，音量 200%、对白增强、音画同步</span></li>
         </ul>
       </div>
-      <div class="menu-demo reveal">
-        <div class="ctx">
-          <div data-i18n="ctx.pause">⏸ 暂停</div>
-          <div class="sub" data-i18n="ctx.speed">播放速度（1.25×）</div>
-          <div class="sub hl" data-i18n="ctx.q">画质</div>
-          <div class="sub" data-i18n="ctx.ar">画面比例</div>
-          <div class="chk" data-i18n="ctx.crop">去黑边</div>
-          <div class="sub" data-i18n="ctx.subs">字幕</div>
-          <hr>
-          <div data-i18n="ctx.fav">★ 取消收藏</div>
-          <div data-i18n="ctx.next">下一个（PgDn）</div>
-          <div class="chk" data-i18n="ctx.auto">播完自动播放下一个</div>
-          <hr>
-          <div data-i18n="ctx.full">全屏</div>
+      <div class="panels reveal">
+        <div class="pnl a">
+          <div class="ph"><span data-i18n="pm.vt">视频设置</span><i></i></div>
+          <div class="tabs"><span class="on" data-i18n="pm.t1">画质</span><span data-i18n="pm.t2">画面与比例</span><span data-i18n="pm.t3">播放</span><span data-i18n="pm.t4">声音</span></div>
+          <div class="rowp"><span data-i18n="pm.r1">画质模板</span><span class="opts"><span data-i18n="pm.o1">普通</span><span class="on" data-i18n="pm.o2">鲜艳</span><span data-i18n="pm.o3">电影</span><span data-i18n="pm.o4">游戏</span></span></div>
+          <div class="rowp"><span data-i18n="pm.r2">智能高清</span><span class="opts"><span data-i18n="pm.h0">关</span><span data-i18n="pm.h1">低</span><span class="on" data-i18n="pm.h2">中</span><span data-i18n="pm.h3">高</span></span></div>
+          <div class="rowp"><span data-i18n="pm.s1">亮度</span><span class="sl"><i style="width:52%"></i></span></div>
+          <div class="rowp"><span data-i18n="pm.s2">对比度</span><span class="sl"><i style="width:60%"></i></span></div>
+          <div class="rowp"><span data-i18n="pm.s3">饱和度</span><span class="sl"><i style="width:68%"></i></span></div>
+          <div class="rowp" style="padding-bottom:14px"><span data-i18n="pm.s4">去黑边</span><span class="opts"><span class="on" data-i18n="pm.on">开</span></span></div>
         </div>
-        <div class="ctx second">
-          <div data-i18n="ctx.q1">普通</div>
-          <div class="chk hl" data-i18n="ctx.q2">鲜艳</div>
-          <div data-i18n="ctx.q3">电影</div>
-          <div data-i18n="ctx.q4">游戏</div>
-          <hr>
-          <div class="chk" data-i18n="ctx.hd">智能高清</div>
-          <hr>
-          <div class="sub" data-i18n="ctx.b">亮度 +2</div>
-          <div class="sub" data-i18n="ctx.c">对比度 +10</div>
-          <div class="sub" data-i18n="ctx.s">饱和度 +30</div>
+        <div class="pnl b">
+          <div class="ph"><span data-i18n="pm.st">字幕设置</span><i></i></div>
+          <div class="tabs"><span class="on" data-i18n="pm.u1">样式</span><span data-i18n="pm.u2">位置与显示</span><span data-i18n="pm.u3">同步</span></div>
+          <div class="prev"><b data-i18n="pm.sample">这是一行示例字幕</b><small>This is a sample subtitle line.</small></div>
+          <div class="rowp"><span data-i18n="pm.tpl">模板</span><span class="opts"><span data-i18n="pm.k1">经典白字</span><span class="on" data-i18n="pm.k2">黄字粗体</span><span data-i18n="pm.k3">背景框</span></span></div>
+          <div class="rowp" style="padding-bottom:14px"><span data-i18n="pm.pos">距画面底部</span><span class="sl"><i style="width:80%"></i></span></div>
         </div>
       </div>
     </div>
@@ -418,7 +464,7 @@ footer a:hover { color: var(--fg); }
       <h2 data-i18n="d.title">现在就让你的视频开口说中文</h2>
       <p class="lead" data-i18n="d.lead">个人使用永久免费。安装包内含播放器、识别引擎和翻译引擎，首次使用按硬件自动下载合适的模型。</p>
       <div class="dl-grid">
-        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.4.0 · 安装包约 132MB</small></div></a>
+        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.5.0 · 安装包约 132MB</small></div></a>
         <a class="dl" id="dlEmby" href="#"><div class="ic">📺</div><div><b data-i18n="d.emby">Emby 插件</b><small data-i18n="d.embyS">v1.2.0 · Linux / Docker / NAS / Windows</small></div></a>
       </div>
       <p class="req" data-i18n="d.req">Windows 10 / 11 64 位 · 有独立显卡更快（NVIDIA / AMD / Intel 均可），没有也能用 · 所有历史版本见 GitHub Releases</p>
@@ -447,7 +493,7 @@ footer a:hover { color: var(--fg); }
 
 <footer>
   <div class="wrap">
-    <div>© 2026 Subtitle Studio · <span data-i18n="foot.lic">仅限个人非商业使用</span></div>
+    <div>© 2026 <span data-i18n="brand">边播边译</span> · <span data-i18n="foot.lic">仅限个人非商业使用</span></div>
     <div data-i18n="foot.oss">基于开源项目：whisper.cpp · Whisper.net · llama.cpp · 腾讯混元 Hy-MT2 · mpv · FFmpeg · Silero VAD（各组件遵循其自身的开源许可）</div>
     <div><a id="ghLink" href="#">GitHub</a></div>
   </div>
@@ -456,40 +502,48 @@ footer a:hover { color: var(--fg); }
 <script>
 // ---------------- 文案（中 / 英）----------------
 const EN = {
-  "brand": "Subtitle Studio",
+  "brand": "Navo Player",
   "nav.features": "Features", "nav.how": "How it works", "nav.emby": "Emby plugin", "nav.faq": "FAQ", "nav.download": "Download",
-  "hero.pill": "New in v1.4: playlists · favorites · picture enhancement · black-bar removal",
-  "hero.t1": "Any video.", "hero.t2": "Subtitled in your language as it plays.",
+  "hero.pill": "v1.5 redesign: clean PotPlayer-style UI · instant play · subtitle styling · Smart HD",
+  "hero.t1": "The player that", "hero.t2": "generates subtitles in real time.",
   "hero.sub": "Open a video and just watch: on-device AI listens to the dialogue and translates it into subtitles, buffering 3 minutes ahead. No uploads, no subscription, works offline.",
   "hero.cta": "Download free for Windows", "hero.more": "See what it does",
   "hero.m1": "Free for personal use", "hero.m2": "Runs without a GPU", "hero.m3": "Offline translation", "hero.m4": "Windows 10 / 11",
-  "demo.title": "Evening Breeze.mkv · Subtitle Studio", "demo.open": " Open", "demo.target": "Translate to English", "demo.subs": " Subtitles: on",
+  "demo.title": "Evening Breeze.mkv · Navo Player", "demo.open": " Open", "demo.target": "Translate to English", "demo.subs": " Subtitles: on",
   "demo.bi": "Dual", "demo.tr": "Translated", "demo.fav": "★ Favorite", "demo.list": "☰ Library", "demo.live": "Live AI subtitles",
   "demo.rec": "Recognized", "demo.trd": "Translated", "demo.full": "⛶ Fullscreen",
-  "stats.1": "GPU recognition speed (× real time)", "stats.2": "From opening to first subtitle", "stats.3": "Buffered ahead — seek without waiting", "stats.4": "No subscription, no per-minute fees",
+  "stats.1": "GPU recognition speed (× real time)", "stats.2": "Instant play: open to first subtitle", "stats.3": "Buffered ahead — seek without waiting", "stats.4": "No subscription, no per-minute fees",
   "f.eyebrow": "Features", "f.title": "One player that understands every video for you",
   "f.lead": "J-dramas, K-variety, US series, documentaries, lectures, home videos… if it has no subtitles, now it does.",
   "f.1t": "Translate while playing — subtitles in seconds",
   "f.1d": "Local files can be read ahead, so there's no need for low-quality streaming recognition: it listens 40 s at a time, cuts at natural pauses and translates right away, keeping ~3 minutes buffered. The progress bar shows what's recognized (blue) and translated (green).",
+  "f.10t": "Instant play — subtitles catch up", "f.10d": "Videos start immediately, no waiting for the AI. Engines load in the background and recognize a short piece around the playhead first, so the first subtitle appears in about a second.",
+  "f.11t": "Subtitles exactly the way you like", "f.11d": "Font, size, colors, outline, shadow and a translucent box, with four one-click templates. Move subtitles up or down to avoid burned-in subtitles.",
   "f.2t": "Everything runs on your PC", "f.2d": "Speech recognition (whisper.cpp) and translation (Tencent Hunyuan Hy-MT2) run locally. Nothing is uploaded, no account, works offline.",
   "f.3t": "A dozen-plus languages → Chinese / English", "f.3d": "The language is detected from the audio alone. English, Japanese, Korean, French, German, Spanish, Russian, Thai, Vietnamese… choose which to translate and into Simplified, Traditional Chinese or English.",
   "f.4t": "Dual / translated / original in one click", "f.4d": "A small line of the original under each translation — great for language learners. Font size, visibility and subtitle rotation are separate; long lines wrap automatically.",
   "f.5t": "Batch a whole folder", "f.5d": "Tick, sort, pause and resume — even after a restart. Right-click any folder to start. The .srt files work in any player, Emby or Plex.",
   "f.6t": "Subtitles you make are kept", "f.6d": "Stop halfway and it's saved; next time it continues from where you were. Videos that already have subtitles are used as-is, never redone.",
-  "f.7t": "Picture enhancement & black-bar removal", "f.7d": "Normal / Vivid / Cinema / Game presets, Smart HD sharpening, brightness, contrast and saturation, automatic letterbox cropping, one-click aspect ratios.",
+  "f.7t": "Smart HD & black-bar removal", "f.7d": "GPU adaptive sharpening in three strengths for instantly crisper detail; Normal / Vivid / Cinema / Game presets, brightness, contrast, saturation and hue; automatic letterbox cropping.",
   "f.8t": "Playlists · history · favorites", "f.8d": "Drop a folder in to make a playlist that plays on automatically; history remembers where you stopped; favorite anything with one click.",
-  "f.9t": "Thoughtful details", "f.9d": "Drag the window from anywhere, double-click to pause, right-click menu, 0.5×–3× speed, click the speaker to mute, very long file names, Explorer context menu, English / Chinese / Japanese UI.",
+  "f.9t": "As smooth as PotPlayer", "f.9d": "Minimal dark UI: drag the window from anywhere, double-click to pause, wheel for volume (up to 200%), dialogue boost, A-B loop, screenshots, frame step, always-on-top, very long file names, English / Chinese / Japanese UI.",
   "h.eyebrow": "How it works", "h.title": "More accurate than live captions, faster than “generate first, watch later”",
   "h.1t": "Read ahead", "h.1d": "FFmpeg decodes audio only, 40 seconds at a time ahead of the playhead.",
   "h.2t": "Find the speech", "h.2d": "Silero VAD skips music and silence and cuts at natural pauses, reducing hallucinations.",
   "h.3t": "Recognize + translate", "h.3d": "Whisper transcribes; Hunyuan or DeepSeek translates with context so names stay consistent.",
   "h.4t": "Show seamlessly", "h.4d": "Subtitles refresh live on screen; after a seek, the new spot is filled in within seconds.",
-  "q.eyebrow": "Right-click menu", "q.title": "Picture, speed and aspect ratio — all one right-click away",
-  "q.1": "<b>Picture presets</b>: Normal, Vivid, Cinema, Game — plus brightness / contrast / saturation / gamma",
-  "q.2": "<b>Smart HD</b>: high-quality scaling + debanding + adaptive sharpening; older and low-res videos look clearly sharper",
-  "q.3": "<b>Remove black bars</b>: detects letterboxing baked into the picture and crops it away",
-  "q.4": "<b>Aspect ratio</b>: original / 16:9 / 4:3 / 21:9 / 2.35:1… fit, crop or stretch to the window, or lock the window to the video's shape",
-  "q.5": "<b>Playback speed</b>: 0.5× to 3×, fine-tune with <kbd>[</kbd> <kbd>]</kbd>",
+  "q.eyebrow": "Subtitle & video panels", "q.title": "Two buttons for everything about subtitles and picture",
+  "q.1": "<b>Subtitle look</b>: font, size, colors, outline, background box, four templates, live preview",
+  "q.2": "<b>Subtitle position</b>: move them up or down to avoid burned-in subtitles (Ctrl+↑ / ↓)",
+  "q.3": "<b>Smart HD</b>: GPU adaptive sharpening in Low / Medium / High, works with hardware decoding",
+  "q.4": "<b>Picture</b>: black-bar removal, common aspect ratios, zoom, flip, lock window to the video's shape, always on top",
+  "q.5": "<b>Playback & audio</b>: 0.5×–3× speed, A-B loop, screenshots, frame step, 200% volume, dialogue boost, A/V sync",
+  "pm.vt": "Video settings", "pm.t1": "Picture", "pm.t2": "Picture & aspect", "pm.t3": "Playback", "pm.t4": "Audio",
+  "pm.r1": "Preset", "pm.o1": "Normal", "pm.o2": "Vivid", "pm.o3": "Cinema", "pm.o4": "Game",
+  "pm.r2": "Smart HD", "pm.h0": "Off", "pm.h1": "Low", "pm.h2": "Medium", "pm.h3": "High",
+  "pm.s1": "Brightness", "pm.s2": "Contrast", "pm.s3": "Saturation", "pm.s4": "Black bars", "pm.on": "Remove",
+  "pm.st": "Subtitle settings", "pm.u1": "Style", "pm.u2": "Position & display", "pm.u3": "Sync",
+  "pm.sample": "This is a sample subtitle", "pm.tpl": "Template", "pm.k1": "Classic white", "pm.k2": "Yellow bold", "pm.k3": "Box", "pm.pos": "From bottom",
   "ctx.pause": "⏸ Pause", "ctx.speed": "Playback speed (1.25×)", "ctx.q": "Picture quality", "ctx.ar": "Aspect ratio", "ctx.crop": "Remove black bars", "ctx.subs": "Subtitles",
   "ctx.fav": "★ Remove from favorites", "ctx.next": "Next (PgDn)", "ctx.auto": "Auto-play next", "ctx.full": "Fullscreen",
   "ctx.q1": "Normal", "ctx.q2": "Vivid", "ctx.q3": "Cinema", "ctx.q4": "Game", "ctx.hd": "Smart HD", "ctx.b": "Brightness +2", "ctx.c": "Contrast +10", "ctx.s": "Saturation +30",
@@ -497,13 +551,13 @@ const EN = {
   "t.r1": "15–40× real time (measured)", "t.f1": "about 3–8 min", "t.h2": "8 GB-class GPU", "t.f2": "about 10–15 min", "t.h3": "8+ core CPU · small", "t.f3": "about 20–40 min",
   "t.h4": "Low-power CPU", "t.f4": "1 hour+ (generate ahead)",
   "e.eyebrow": "Bonus · Emby plugin", "e.title": "Your Emby library subtitles new movies automatically",
-  "e.lead": "Works on a NAS without a GPU: recognition on the CPU, translation with the built-in offline model or DeepSeek — or borrow the GPU of a PC on your network running Subtitle Studio. It only works when needed:",
+  "e.lead": "Works on a NAS without a GPU: recognition on the CPU, translation with the built-in offline model or DeepSeek — or borrow the GPU of a PC on your network running Navo Player. It only works when needed:",
   "e.r1t": "English movies", "e.r1d": "Skipped if English subtitles exist; otherwise English subtitles are created",
   "e.r2t": "Foreign movies", "e.r2d": "Chinese subtitles created when missing; an existing English subtitle is simply translated",
   "e.r3t": "Chinese movies", "e.r3d": "Skipped. Every rule is configurable in the settings page",
   "d.eyebrow": "Download", "d.title": "Make every video speak your language — today",
   "d.lead": "Free forever for personal use. The installer includes the player and both AI engines; the right models are downloaded for your hardware on first use.",
-  "d.win": "Windows desktop app", "d.winS": "v1.4.0 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
+  "d.win": "Windows desktop app", "d.winS": "v1.5.0 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
   "d.req": "Windows 10 / 11 64-bit · a dedicated GPU makes it faster (NVIDIA / AMD / Intel), but it isn't required · all versions on GitHub Releases",
   "faq.eyebrow": "FAQ", "faq.title": "Questions you might have",
   "faq.1q": "Is it really free? What's the catch?", "faq.1a": "Completely free for personal use — no ads, no account, no time limits. Any commercial use is prohibited (including internal use at a company, use in a paid service, resale or redistribution in a bundle).",
@@ -541,7 +595,7 @@ function applyLang(l) {
   document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.dataset.i18n; el.textContent = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
   document.querySelectorAll("[data-i18n-html]").forEach(el => { const k = el.dataset.i18nHtml; el.innerHTML = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
   document.getElementById("langBtn").textContent = l === "zh" ? "EN" : "中文";
-  document.title = l === "zh" ? "边播边译 Subtitle Studio · 任何视频，边播边出中文字幕" : "Subtitle Studio · Live AI subtitles for any video";
+  document.title = l === "zh" ? "边播边译 · 任何视频，边播边出中文字幕" : "Navo Player · The player that generates subtitles in real time";
 }
 document.getElementById("langBtn").onclick = () => { const l = lang === "zh" ? "en" : "zh"; try { localStorage.setItem("ss-lang", l); } catch (e) {} applyLang(l); };
 applyLang(pickLang());
@@ -580,7 +634,7 @@ async function typeLine() {
   for (let i = 1; i <= target.length; i++) { subTr.innerHTML = target.slice(0, i).replace(/&/g, "&amp;").replace(/</g, "&lt;") + '<span class="caret"></span>'; await sleep(lang === "zh" ? 55 : 22); }
   subTr.textContent = target;
   await sleep(2400);
-  if (li % 3 === 0) { osd.textContent = lang === "zh" ? ["画质：鲜艳", "播放速度 1.25×", "已去黑边"][li / 3 % 3 | 0] : ["Picture: Vivid", "Speed 1.25×", "Black bars removed"][li / 3 % 3 | 0]; osd.classList.add("show"); setTimeout(() => osd.classList.remove("show"), 1600); }
+  if (li % 3 === 0) { osd.textContent = lang === "zh" ? ["智能高清：中", "字幕位置：距底部 12%", "已去黑边"][li / 3 % 3 | 0] : ["Smart HD: Medium", "Subtitle position: 12% from bottom", "Black bars removed"][li / 3 % 3 | 0]; osd.classList.add("show"); setTimeout(() => osd.classList.remove("show"), 1600); }
   typeLine();
 }
 typeLine();
