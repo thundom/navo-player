@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subtitle Studio · 边播边译</title>
+<meta name="description" content="Watch any video with live AI subtitles in your language — speech recognition and translation run on your own PC. Free for personal use.">
+<meta property="og:title" content="Subtitle Studio · 边播边译">
+<meta property="og:description" content="Live AI subtitles for any video, translated while it plays. Runs locally, no subscription.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235b5bf7'/%3E%3Cpath d='M18 40h28M22 48h20' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M26 16l14 9-14 9z' fill='white'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07070c; --bg2: #0e0e18; --card: rgba(255,255,255,.045); --line: rgba(255,255,255,.09);
+  --fg: #f2f2f7; --dim: #9b9bb0; --accent: #7c6cff; --accent2: #22d3a6; --accent3: #ff5fa2; --gold: #ffcf5a;
+  --rec: #6c7fd8; --tr: #2ecc71;
+  --font: "Inter", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- 背景光晕 ---------- */
+.aurora { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.aurora i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; animation: drift 22s ease-in-out infinite alternate; }
+.aurora i:nth-child(1) { width: 620px; height: 620px; background: #4b3cff; top: -180px; left: -120px; }
+.aurora i:nth-child(2) { width: 520px; height: 520px; background: #0fb88f; top: 30%; right: -160px; animation-delay: -6s; opacity: .35; }
+.aurora i:nth-child(3) { width: 460px; height: 460px; background: #d6337f; bottom: -200px; left: 30%; animation-delay: -12s; opacity: .3; }
+@keyframes drift { to { transform: translate(80px, 60px) scale(1.15); } }
+.grain { position: fixed; inset: 0; z-index: -1; opacity: .05; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+/* ---------- 导航 ---------- */
+nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px); background: rgba(7,7,12,.6); border-bottom: 1px solid var(--line); }
+nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
+.logo svg { width: 30px; height: 30px; }
+nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--dim); }
+nav .links a:hover { color: var(--fg); }
+.lang { border: 1px solid var(--line); background: var(--card); color: var(--fg); border-radius: 999px; padding: 6px 14px; font: 600 13px var(--font); cursor: pointer; }
+.lang:hover { border-color: var(--accent); }
+@media (max-width: 760px) { nav .links { display: none; } .lang { margin-left: auto; } }
+
+/* ---------- 按钮 ---------- */
+.btn { display: inline-flex; align-items: center; gap: 10px; padding: 15px 26px; border-radius: 14px; font-weight: 700; font-size: 16px; transition: transform .2s, box-shadow .2s; cursor: pointer; border: 0; }
+.btn svg { width: 20px; height: 20px; }
+.btn.primary { background: linear-gradient(135deg, var(--accent), #5a8bff 55%, var(--accent2)); color: #fff; box-shadow: 0 10px 40px -10px rgba(124,108,255,.8); position: relative; overflow: hidden; }
+.btn.primary::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%); transform: translateX(-100%); animation: shine 3.5s infinite; }
+@keyframes shine { 60%, 100% { transform: translateX(100%); } }
+.btn.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 50px -10px rgba(124,108,255,.95); }
+.btn.ghost { border: 1px solid var(--line); background: var(--card); color: var(--fg); }
+.btn.ghost:hover { border-color: rgba(255,255,255,.3); transform: translateY(-2px); }
+
+/* ---------- 首屏 ---------- */
+.hero { padding: 86px 0 40px; text-align: center; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); font-size: 13px; color: var(--dim); margin-bottom: 26px; }
+.pill b { color: var(--accent2); font-weight: 600; }
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); box-shadow: 0 0 12px var(--accent2); animation: pulse 1.6s infinite; }
+@keyframes pulse { 50% { opacity: .35; } }
+h1 { font-size: clamp(40px, 7vw, 84px); line-height: 1.04; font-weight: 900; letter-spacing: -.035em; }
+h1 .grad { background: linear-gradient(100deg, #a99bff, #6fb6ff 40%, #3ee0b3 70%, #ff8fc1); -webkit-background-clip: text; background-clip: text; color: transparent; background-size: 200% auto; animation: flow 8s linear infinite; }
+@keyframes flow { to { background-position: 200% center; } }
+.hero p.sub { max-width: 720px; margin: 24px auto 0; font-size: clamp(16px, 2vw, 20px); color: var(--dim); }
+.cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 38px; }
+.meta { margin-top: 18px; font-size: 13px; color: var(--dim); display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+.meta span::before { content: "✓ "; color: var(--accent2); }
+
+/* ---------- 播放器演示 ---------- */
+.stage { margin: 64px auto 0; max-width: 1020px; perspective: 1600px; }
+.player { position: relative; border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,255,255,.12); background: #000;
+  box-shadow: 0 40px 120px -30px rgba(91,91,247,.55), 0 0 0 1px rgba(255,255,255,.04) inset; transform: rotateX(8deg); transition: transform .8s cubic-bezier(.2,.7,.2,1); }
+.stage:hover .player { transform: rotateX(0); }
+.titlebar { height: 34px; background: #16161c; display: flex; align-items: center; gap: 8px; padding: 0 14px; font-size: 12px; color: #aaa; }
+.titlebar i { width: 11px; height: 11px; border-radius: 50%; background: #3a3a44; }
+.toolbar { height: 44px; background: #222228; display: flex; align-items: center; gap: 7px; padding: 0 12px; }
+.tb { height: 28px; border-radius: 5px; background: #34343c; color: #e6e6eb; font-size: 12px; display: flex; align-items: center; padding: 0 11px; white-space: nowrap; }
+.tb.on { background: var(--tr); color: #000; }
+.tb.fav { color: var(--gold); outline: 1px solid rgba(255,207,90,.6); }
+.tb.sp { margin-left: auto; }
+@media (max-width: 760px) { .tb.hide-m { display: none; } }
+.screen { position: relative; aspect-ratio: 16 / 7.6; overflow: hidden; background: radial-gradient(120% 90% at 30% 20%, #2b3a63, #0b0f1d 60%, #05060a); }
+.scene { position: absolute; inset: 0; }
+.scene .moon { position: absolute; width: 90px; height: 90px; border-radius: 50%; right: 14%; top: 13%; background: radial-gradient(circle at 35% 35%, #fff9e6, #ffd98a 60%, #d79c3a); box-shadow: 0 0 80px 20px rgba(255,214,120,.35); }
+.scene .hill { position: absolute; left: -10%; right: -10%; bottom: -30%; height: 70%; border-radius: 50%; background: linear-gradient(#18233d, #0a0e18); }
+.scene .hill.b { bottom: -45%; left: 30%; background: linear-gradient(#111a2e, #06080f); }
+.scene .city { position: absolute; bottom: 18%; left: 6%; display: flex; gap: 6px; align-items: flex-end; }
+.scene .city b { width: 26px; background: #0f1628; border-radius: 3px 3px 0 0; position: relative; }
+.scene .city b::after { content: ""; position: absolute; inset: 8px 6px auto; height: 60%; background: repeating-linear-gradient(#ffcf6a 0 3px, transparent 3px 9px); opacity: .5; }
+.scene .star { position: absolute; width: 2px; height: 2px; background: #fff; border-radius: 50%; animation: tw 3s infinite; }
+@keyframes tw { 50% { opacity: .2; } }
+.subs { position: absolute; left: 0; right: 0; bottom: 9%; text-align: center; padding: 0 6%; }
+.subs .tr { font-size: clamp(16px, 2.6vw, 30px); font-weight: 700; text-shadow: 0 2px 0 #000, 0 0 12px rgba(0,0,0,.9), 2px 2px 0 #000, -2px -2px 0 #000; min-height: 1.4em; }
+.subs .or { font-size: clamp(11px, 1.5vw, 17px); color: #d6d6de; margin-top: 4px; text-shadow: 0 1px 0 #000, 0 0 8px #000; min-height: 1.3em; }
+.caret { display: inline-block; width: 2px; height: 1em; background: currentColor; vertical-align: -0.12em; margin-left: 2px; animation: pulse 1s infinite; }
+.osd { position: absolute; top: 14px; left: 16px; font-size: 13px; color: #fff; background: rgba(0,0,0,.45); padding: 4px 10px; border-radius: 6px; opacity: 0; transition: opacity .4s; }
+.osd.show { opacity: 1; }
+.badge-live { position: absolute; top: 14px; right: 16px; display: flex; gap: 6px; align-items: center; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 6px; background: rgba(46,204,113,.18); color: #7cf0b0; border: 1px solid rgba(46,204,113,.35); }
+.badge-live .dot { width: 7px; height: 7px; border-radius: 50%; background: #2ecc71; animation: pulse 1.2s infinite; }
+.bottom { background: #222228; padding: 10px 12px 12px; }
+.seek { position: relative; height: 8px; border-radius: 4px; background: #3a3a44; overflow: hidden; }
+.seek .rec, .seek .trn { position: absolute; top: 0; bottom: 0; left: 0; }
+.seek .rec { background: var(--rec); }
+.seek .trn { background: var(--tr); }
+.seek .head { position: absolute; top: -3px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,.6); }
+.ctrl { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-size: 12px; color: #ddd; }
+.ctrl .tb { height: 26px; }
+.ctrl .time { font-family: Consolas, monospace; }
+.ctrl .buf { color: #6ff0a8; }
+.ctrl .legend { display: flex; gap: 10px; color: #9a9aa8; }
+.ctrl .legend i { display: inline-block; width: 10px; height: 7px; margin-right: 4px; }
+
+/* ---------- 统计条 ---------- */
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 80px auto 0; max-width: 1020px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.stats div { background: var(--bg2); padding: 26px 20px; text-align: center; }
+.stats b { display: block; font-size: clamp(26px, 4vw, 40px); font-weight: 900; letter-spacing: -.03em; background: linear-gradient(120deg, #fff, #b9b0ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stats span { font-size: 13px; color: var(--dim); }
+@media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------- 区块 ---------- */
+section { padding: 110px 0 0; }
+.eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--accent2); }
+h2 { font-size: clamp(30px, 4.6vw, 52px); line-height: 1.12; font-weight: 900; letter-spacing: -.03em; margin-top: 10px; max-width: 820px; }
+.lead { color: var(--dim); font-size: 18px; max-width: 720px; margin-top: 16px; }
+
+/* 功能卡片 */
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 48px; }
+@media (max-width: 960px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+.card { position: relative; padding: 28px; border-radius: 20px; background: var(--card); border: 1px solid var(--line); overflow: hidden; transition: transform .3s, border-color .3s; }
+.card:hover { transform: translateY(-4px); border-color: rgba(124,108,255,.45); }
+.card::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(124,108,255,.55), transparent 40%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .3s; }
+.card:hover::before { opacity: 1; }
+.card .ic { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; font-size: 22px; margin-bottom: 18px;
+  background: linear-gradient(135deg, rgba(124,108,255,.25), rgba(34,211,166,.15)); border: 1px solid rgba(255,255,255,.08); }
+.card h3 { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+.card p { color: var(--dim); font-size: 15px; margin-top: 8px; }
+.card.wide { grid-column: span 2; }
+@media (max-width: 640px) { .card.wide { grid-column: auto; } }
+
+/* 流程 */
+.flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 48px; counter-reset: s; }
+@media (max-width: 860px) { .flow { grid-template-columns: 1fr 1fr; } }
+.step { padding: 24px; border-radius: 18px; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015)); border: 1px solid var(--line); position: relative; }
+.step::before { counter-increment: s; content: "0" counter(s); font-size: 44px; font-weight: 900; letter-spacing: -.04em; display: block; line-height: 1; margin-bottom: 14px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.step h4 { font-size: 17px; font-weight: 800; }
+.step p { color: var(--dim); font-size: 14px; margin-top: 6px; }
+
+/* 两栏展示 */
+.split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 54px; align-items: center; margin-top: 30px; }
+@media (max-width: 900px) { .split { grid-template-columns: 1fr; } }
+.ticks { list-style: none; margin-top: 26px; display: grid; gap: 14px; }
+.ticks li { display: flex; gap: 12px; color: #d8d8e2; }
+.ticks li::before { content: ""; flex: none; width: 22px; height: 22px; margin-top: 2px; border-radius: 7px; background: rgba(34,211,166,.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 12.5l4 4 8-9' fill='none' stroke='%2322d3a6' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/16px no-repeat; }
+.ticks b { color: #fff; }
+
+/* 右键菜单演示 */
+.menu-demo { position: relative; border-radius: 20px; padding: 26px; background: radial-gradient(120% 120% at 0% 0%, rgba(124,108,255,.18), transparent 50%), var(--bg2); border: 1px solid var(--line); min-height: 360px; }
+.ctx { width: 250px; background: #f7f7fa; color: #111; border-radius: 10px; padding: 6px 0; font-size: 13.5px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.8); }
+.ctx div { padding: 6px 16px 6px 34px; position: relative; display: flex; justify-content: space-between; }
+.ctx div.hl { background: #dbe4ff; }
+.ctx div.chk::before { content: "✓"; position: absolute; left: 13px; color: #3d5afe; font-weight: 800; }
+.ctx div.sub::after { content: "›"; color: #777; }
+.ctx hr { border: 0; border-top: 1px solid #e3e3ea; margin: 5px 0; }
+.ctx.second { position: absolute; left: 240px; top: 92px; width: 230px; }
+@media (max-width: 560px) { .ctx.second { left: 120px; top: 190px; } }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 22px; }
+.chip { padding: 7px 13px; border-radius: 999px; font-size: 13px; border: 1px solid var(--line); background: var(--card); color: #ddd; }
+
+/* 速度表 */
+table { width: 100%; border-collapse: collapse; margin-top: 40px; font-size: 15px; }
+th, td { text-align: left; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+th { color: var(--dim); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; }
+td:first-child { font-weight: 700; }
+tr:hover td { background: rgba(255,255,255,.02); }
+.bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); min-width: 6px; }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 18px; background: var(--bg2); padding: 0 6px 6px; }
+
+/* Emby */
+.emby { margin-top: 30px; padding: 44px; border-radius: 26px; border: 1px solid var(--line);
+  background: radial-gradient(90% 140% at 100% 0%, rgba(82,181,75,.22), transparent 55%), radial-gradient(70% 100% at 0% 100%, rgba(124,108,255,.18), transparent 60%), var(--bg2); }
+.emby .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 30px; }
+@media (max-width: 820px) { .emby .rules { grid-template-columns: 1fr; } .emby { padding: 28px; } }
+.rule { padding: 18px; border-radius: 14px; background: rgba(0,0,0,.28); border: 1px solid var(--line); font-size: 14px; color: #ccd; }
+.rule b { display: block; color: #fff; font-size: 15px; margin-bottom: 4px; }
+
+/* 下载 */
+.download { text-align: center; margin-top: 30px; padding: 70px 30px; border-radius: 30px; position: relative; overflow: hidden; border: 1px solid rgba(124,108,255,.35);
+  background: radial-gradient(60% 120% at 50% 0%, rgba(124,108,255,.35), transparent 60%), var(--bg2); }
+.download h2 { margin: 10px auto 0; }
+.download .lead { margin: 16px auto 0; }
+.dl-grid { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 36px; }
+.dl { display: flex; align-items: center; gap: 16px; text-align: left; padding: 18px 22px; border-radius: 16px; background: rgba(0,0,0,.35); border: 1px solid var(--line); min-width: 300px; transition: transform .2s, border-color .2s; }
+.dl:hover { transform: translateY(-3px); border-color: var(--accent); }
+.dl .ic { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; background: linear-gradient(135deg, var(--accent), var(--accent2)); }
+.dl b { display: block; font-size: 16px; }
+.dl small { color: var(--dim); font-size: 13px; }
+.req { margin-top: 26px; font-size: 13px; color: var(--dim); }
+
+/* FAQ */
+details { border-bottom: 1px solid var(--line); padding: 20px 4px; }
+details summary { cursor: pointer; font-weight: 700; font-size: 17px; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+details summary::after { content: "+"; color: var(--accent2); font-size: 22px; line-height: 1; transition: transform .3s; }
+details[open] summary::after { transform: rotate(45deg); }
+details p { color: var(--dim); margin-top: 10px; font-size: 15px; max-width: 860px; }
+.faq { margin-top: 30px; }
+
+/* 许可 */
+.license { margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+@media (max-width: 760px) { .license { grid-template-columns: 1fr; } }
+.lic { padding: 26px; border-radius: 18px; border: 1px solid var(--line); background: var(--card); }
+.lic h3 { font-size: 18px; display: flex; gap: 10px; align-items: center; }
+.lic ul { margin: 12px 0 0 20px; color: var(--dim); font-size: 14.5px; display: grid; gap: 6px; }
+.lic.ok h3 { color: #7cf0b0; }
+.lic.no h3 { color: #ff8fa8; }
+
+footer { margin-top: 110px; padding: 40px 0 50px; border-top: 1px solid var(--line); color: var(--dim); font-size: 13px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 30px; justify-content: space-between; }
+footer a:hover { color: var(--fg); }
+
+/* 出现动画 */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+.reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<div class="grain"></div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top">
+      <svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c6cff"/><stop offset="1" stop-color="#22d3a6"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><path d="M26 15l15 9.5L26 34z" fill="#fff"/><path d="M16 42h32M22 50h20" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
+      <span data-i18n="brand">边播边译</span>
+    </a>
+    <div class="links">
+      <a href="#features" data-i18n="nav.features">功能</a>
+      <a href="#how" data-i18n="nav.how">原理</a>
+      <a href="#emby" data-i18n="nav.emby">Emby 插件</a>
+      <a href="#faq" data-i18n="nav.faq">常见问题</a>
+      <a href="#download" data-i18n="nav.download">下载</a>
+    </div>
+    <button class="lang" id="langBtn" aria-label="Switch language">EN</button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.4 新增：播放列表 · 收藏 · 画质增强 · 去黑边</span></div>
+    <h1 class="reveal"><span data-i18n="hero.t1">任何视频，</span><br><span class="grad" data-i18n="hero.t2">边播边出母语字幕</span></h1>
+    <p class="sub reveal" data-i18n="hero.sub">打开视频就能看：本机 AI 一边听台词、一边翻译成中文字幕，提前缓冲 3 分钟。不用上传、不用订阅、没有网络也能用。</p>
+    <div class="cta reveal">
+      <a class="btn primary dl-link" href="#download">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 21h16"/></svg>
+        <span data-i18n="hero.cta">免费下载 Windows 版</span>
+      </a>
+      <a class="btn ghost" href="#features"><span data-i18n="hero.more">看看能做什么</span> →</a>
+    </div>
+    <div class="meta reveal">
+      <span data-i18n="hero.m1">个人免费使用</span><span data-i18n="hero.m2">无需显卡也能跑</span><span data-i18n="hero.m3">离线翻译</span><span data-i18n="hero.m4">Windows 10 / 11</span>
+    </div>
+
+    <div class="stage reveal">
+      <div class="player" id="demo">
+        <div class="titlebar"><i></i><i></i><i></i>&nbsp; <span data-i18n="demo.title">晚风.mkv · 边播边译</span></div>
+        <div class="toolbar">
+          <div class="tb">📂 <span data-i18n="demo.open">&nbsp;打开</span></div>
+          <div class="tb hide-m" data-i18n="demo.target">翻译成 简体中文</div>
+          <div class="tb hide-m">💬 <span data-i18n="demo.subs">&nbsp;字幕：显示</span></div>
+          <div class="tb on" data-i18n="demo.bi">双语</div>
+          <div class="tb hide-m" data-i18n="demo.tr">译文</div>
+          <div class="tb sp fav" data-i18n="demo.fav">★ 已收藏</div>
+          <div class="tb hide-m" data-i18n="demo.list">☰ 列表</div>
+        </div>
+        <div class="screen">
+          <div class="scene" id="scene">
+            <div class="moon"></div>
+            <div class="city"><b style="height:70px"></b><b style="height:110px"></b><b style="height:84px"></b><b style="height:140px"></b><b style="height:96px"></b><b style="height:60px"></b></div>
+            <div class="hill"></div><div class="hill b"></div>
+          </div>
+          <div class="badge-live"><span class="dot"></span><span data-i18n="demo.live">AI 实时字幕</span></div>
+          <div class="osd" id="osd"></div>
+          <div class="subs"><div class="tr" id="subTr"></div><div class="or" id="subOr"></div></div>
+        </div>
+        <div class="bottom">
+          <div class="seek"><div class="rec" id="segRec"></div><div class="trn" id="segTr"></div><div class="head" id="head"></div></div>
+          <div class="ctrl">
+            <div class="tb">⏸</div><div class="tb hide-m">⏮</div><div class="tb hide-m">⏭</div>
+            <span class="time" id="time">0:12:04 / 1:52:30</span>
+            <span class="legend hide-m"><span><i style="background:var(--rec)"></i><span data-i18n="demo.rec">已识别</span></span><span><i style="background:var(--tr)"></i><span data-i18n="demo.trd">已翻译</span></span></span>
+            <span class="buf" id="buf"></span>
+            <span style="margin-left:auto" class="tb hide-m">1.25×</span><span>🔊</span><div class="tb" data-i18n="demo.full">⛶ 全屏</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal">
+      <div><b>15–40×</b><span data-i18n="stats.1">显卡识别速度（实时倍数）</span></div>
+      <div><b>~3s</b><span data-i18n="stats.2">打开视频到出第一句字幕</span></div>
+      <div><b>3 min</b><span data-i18n="stats.3">提前缓冲，拖动也不用等</span></div>
+      <div><b>0 ¥</b><span data-i18n="stats.4">不订阅、不按分钟收费</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="eyebrow reveal" data-i18n="f.eyebrow">功能</div>
+    <h2 class="reveal" data-i18n="f.title">一个播放器，替你听懂全世界的视频</h2>
+    <p class="lead reveal" data-i18n="f.lead">日剧、韩综、美剧、纪录片、网课、家庭录像……没有字幕的视频，打开就有。</p>
+    <div class="grid">
+      <div class="card wide reveal"><div class="ic">⚡</div><h3 data-i18n="f.1t">边播边译，开头几秒就出字幕</h3><p data-i18n="f.1d">本地文件可以提前读取后面的音频，所以不用质量差的"实时流式识别"：每次听 40 秒、在静音处断句、马上翻译，在播放位置前保持约 3 分钟缓冲。进度条上灰蓝色 = 已识别，绿色 = 已翻译，一目了然。</p></div>
+      <div class="card reveal"><div class="ic">🔒</div><h3 data-i18n="f.2t">全部在你的电脑上完成</h3><p data-i18n="f.2d">语音识别（whisper.cpp）和翻译（腾讯混元 Hy-MT2）都跑在本机。视频不上传，没有账号，断网也能用。</p></div>
+      <div class="card reveal"><div class="ic">🌏</div><h3 data-i18n="f.3t">十几种语言 → 中 / 英</h3><p data-i18n="f.3d">只听音频自动判断语言。英、日、韩、法、德、西、俄、泰、越……可以设定哪些语言要翻译、翻译成简体 / 繁体 / 英文。</p></div>
+      <div class="card reveal"><div class="ic">🎚️</div><h3 data-i18n="f.4t">双语 / 译文 / 原文，一键切换</h3><p data-i18n="f.4d">译文下面带一行小字原文，学外语也好用。字号、显示隐藏、字幕旋转都能单独调，长句自动换行。</p></div>
+      <div class="card reveal"><div class="ic">📁</div><h3 data-i18n="f.5t">整个文件夹批量生成</h3><p data-i18n="f.5d">勾选、排序、断点续做，关机下次接着来。在文件夹上右键就能开始，生成的 .srt 任何播放器、Emby、Plex 都能用。</p></div>
+      <div class="card reveal"><div class="ic">💾</div><h3 data-i18n="f.6t">做过的字幕永久复用</h3><p data-i18n="f.6d">看到一半关掉也会保存，下次从上次的位置和进度继续。旁边已经有中文字幕的视频直接使用，不重复识别。</p></div>
+      <div class="card reveal"><div class="ic">🎬</div><h3 data-i18n="f.7t">画质增强与去黑边</h3><p data-i18n="f.7d">普通 / 鲜艳 / 电影 / 游戏预设，智能高清锐化，亮度对比度饱和度微调，自动裁掉画面里的黑边，常用比例一键切换。</p></div>
+      <div class="card reveal"><div class="ic">⭐</div><h3 data-i18n="f.8t">播放列表 · 历史 · 收藏</h3><p data-i18n="f.8d">拖进文件夹就是播放列表，播完自动下一个；播放历史记得看到哪；喜欢的视频一键收藏。</p></div>
+      <div class="card reveal"><div class="ic">🖱️</div><h3 data-i18n="f.9t">顺手的小细节</h3><p data-i18n="f.9d">按住画面任意处拖动窗口、双击暂停、右键菜单、0.5×–3× 变速、点喇叭静音、超长文件名、资源管理器右键菜单、中 / 繁 / 英 / 日界面。</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow reveal" data-i18n="h.eyebrow">原理</div>
+    <h2 class="reveal" data-i18n="h.title">比"实时字幕"更准，比"先生成再看"更快</h2>
+    <div class="flow">
+      <div class="step reveal"><h4 data-i18n="h.1t">读取前方音频</h4><p data-i18n="h.1d">FFmpeg 只解码声音，在播放位置前面每次取 40 秒。</p></div>
+      <div class="step reveal"><h4 data-i18n="h.2t">人声检测断句</h4><p data-i18n="h.2d">Silero VAD 跳过音乐和静音，在自然停顿处切句，减少"幻听"。</p></div>
+      <div class="step reveal"><h4 data-i18n="h.3t">识别 + 翻译</h4><p data-i18n="h.3d">whisper 识别原文，混元 / DeepSeek 结合上下文翻译，人名前后一致。</p></div>
+      <div class="step reveal"><h4 data-i18n="h.4t">无缝显示</h4><p data-i18n="h.4d">字幕实时刷新到画面；拖动进度条后几秒就补上新位置。</p></div>
+    </div>
+
+    <div class="split">
+      <div class="reveal">
+        <div class="eyebrow" data-i18n="q.eyebrow">右键菜单</div>
+        <h2 data-i18n="q.title">画面、速度、比例，右键全搞定</h2>
+        <ul class="ticks">
+          <li><span data-i18n-html="q.1"><b>画质预设</b>：普通、鲜艳、电影、游戏，另可单独调亮度 / 对比度 / 饱和度 / 伽马</span></li>
+          <li><span data-i18n-html="q.2"><b>智能高清</b>：高质量缩放 + 去色带 + 自适应锐化，老片、低清片明显更清楚</span></li>
+          <li><span data-i18n-html="q.3"><b>去黑边</b>：自动识别压在画面里的宽银幕黑条并裁掉</span></li>
+          <li><span data-i18n-html="q.4"><b>画面比例</b>：原始 / 16:9 / 4:3 / 21:9 / 2.35:1……适应、裁剪或拉伸填满窗口，窗口也能锁定视频比例</span></li>
+          <li><span data-i18n-html="q.5"><b>播放速度</b>：0.5× 到 3×，<kbd>[</kbd> <kbd>]</kbd> 微调</span></li>
+        </ul>
+      </div>
+      <div class="menu-demo reveal">
+        <div class="ctx">
+          <div data-i18n="ctx.pause">⏸ 暂停</div>
+          <div class="sub" data-i18n="ctx.speed">播放速度（1.25×）</div>
+          <div class="sub hl" data-i18n="ctx.q">画质</div>
+          <div class="sub" data-i18n="ctx.ar">画面比例</div>
+          <div class="chk" data-i18n="ctx.crop">去黑边</div>
+          <div class="sub" data-i18n="ctx.subs">字幕</div>
+          <hr>
+          <div data-i18n="ctx.fav">★ 取消收藏</div>
+          <div data-i18n="ctx.next">下一个（PgDn）</div>
+          <div class="chk" data-i18n="ctx.auto">播完自动播放下一个</div>
+          <hr>
+          <div data-i18n="ctx.full">全屏</div>
+        </div>
+        <div class="ctx second">
+          <div data-i18n="ctx.q1">普通</div>
+          <div class="chk hl" data-i18n="ctx.q2">鲜艳</div>
+          <div data-i18n="ctx.q3">电影</div>
+          <div data-i18n="ctx.q4">游戏</div>
+          <hr>
+          <div class="chk" data-i18n="ctx.hd">智能高清</div>
+          <hr>
+          <div class="sub" data-i18n="ctx.b">亮度 +2</div>
+          <div class="sub" data-i18n="ctx.c">对比度 +10</div>
+          <div class="sub" data-i18n="ctx.s">饱和度 +30</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tablewrap reveal" style="margin-top:70px">
+      <table>
+        <thead><tr><th data-i18n="t.hw">硬件</th><th data-i18n="t.speed">识别速度</th><th></th><th data-i18n="t.film">整部 2 小时片</th></tr></thead>
+        <tbody>
+          <tr><td>RTX 5090 · large-v3-turbo</td><td data-i18n="t.r1">15–40× 实时（实测）</td><td style="width:30%"><div class="bar" style="width:100%"></div></td><td data-i18n="t.f1">约 3–8 分钟</td></tr>
+          <tr><td data-i18n="t.h2">8GB 级显卡</td><td>8–15×</td><td><div class="bar" style="width:42%"></div></td><td data-i18n="t.f2">约 10–15 分钟</td></tr>
+          <tr><td data-i18n="t.h3">8 核以上 CPU · small</td><td>4–10×</td><td><div class="bar" style="width:22%"></div></td><td data-i18n="t.f3">约 20–40 分钟</td></tr>
+          <tr><td data-i18n="t.h4">低功耗 CPU</td><td>1–3×</td><td><div class="bar" style="width:6%"></div></td><td data-i18n="t.f4">1 小时以上（建议整片生成）</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="emby">
+  <div class="wrap">
+    <div class="emby reveal">
+      <div class="eyebrow" style="color:#7fdc74" data-i18n="e.eyebrow">附赠 · Emby 插件</div>
+      <h2 data-i18n="e.title">家里的 Emby 媒体库，新片入库自动配好字幕</h2>
+      <p class="lead" data-i18n="e.lead">没有显卡的 NAS 也能用：语音识别走 CPU，翻译用内置离线模型或 DeepSeek。也能借用局域网里装了边播边译的电脑显卡。只在需要时才生成：</p>
+      <div class="rules">
+        <div class="rule"><b data-i18n="e.r1t">英语片</b><span data-i18n="e.r1d">有英文字幕就跳过；没有就生成英文字幕</span></div>
+        <div class="rule"><b data-i18n="e.r2t">外语片</b><span data-i18n="e.r2d">没有中文字幕时生成；已有英文字幕就直接翻译它</span></div>
+        <div class="rule"><b data-i18n="e.r3t">华语片</b><span data-i18n="e.r3d">跳过。所有规则都可以在设置页修改</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="download">
+  <div class="wrap">
+    <div class="download reveal">
+      <div class="eyebrow" data-i18n="d.eyebrow">下载</div>
+      <h2 data-i18n="d.title">现在就让你的视频开口说中文</h2>
+      <p class="lead" data-i18n="d.lead">个人使用永久免费。安装包内含播放器、识别引擎和翻译引擎，首次使用按硬件自动下载合适的模型。</p>
+      <div class="dl-grid">
+        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.4.0 · 安装包约 132MB</small></div></a>
+        <a class="dl" id="dlEmby" href="#"><div class="ic">📺</div><div><b data-i18n="d.emby">Emby 插件</b><small data-i18n="d.embyS">v1.2.0 · Linux / Docker / NAS / Windows</small></div></a>
+      </div>
+      <p class="req" data-i18n="d.req">Windows 10 / 11 64 位 · 有独立显卡更快（NVIDIA / AMD / Intel 均可），没有也能用 · 所有历史版本见 GitHub Releases</p>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="eyebrow reveal" data-i18n="faq.eyebrow">常见问题</div>
+    <h2 class="reveal" data-i18n="faq.title">你可能想问</h2>
+    <div class="faq">
+      <details class="reveal"><summary data-i18n="faq.1q">真的免费吗？有什么限制？</summary><p data-i18n="faq.1a">个人使用完全免费，没有广告、没有账号、没有时长限制。禁止任何商业用途（包括在公司内部使用、用于商业服务、转售或打包分发）。</p></details>
+      <details class="reveal"><summary data-i18n="faq.2q">没有显卡能用吗？</summary><p data-i18n="faq.2d">可以。程序启动时会检测硬件并推荐配置：8 核以上 CPU 边播边译基本流畅；较弱的 CPU 建议先用"整片生成"提前做好字幕。</p></details>
+      <details class="reveal"><summary data-i18n="faq.3q">会上传我的视频吗？</summary><p data-i18n="faq.3a">不会。默认的识别和翻译都在本机完成。只有你主动选择 DeepSeek 等在线翻译接口时，才会把字幕文字（不是视频和声音）发给对应的服务。</p></details>
+      <details class="reveal"><summary data-i18n="faq.4q">翻译质量怎么样？</summary><p data-i18n="faq.4a">内置的腾讯混元 Hy-MT2 是专门的翻译模型，日常对白通顺；追求更好的人名、俚语和长句，可以换成混元 7B 或 DeepSeek API（一部电影大约几毛钱）。</p></details>
+      <details class="reveal"><summary data-i18n="faq.5q">生成的字幕能给别的播放器用吗？</summary><p data-i18n="faq.5a">可以。字幕以 影片名.语言.srt 保存在视频旁边，PotPlayer、VLC、mpv、Emby、Plex 都能直接加载；也可以设为隐藏文件，文件夹更整洁。</p></details>
+    </div>
+
+    <div class="license">
+      <div class="lic ok reveal"><h3>✓ <span data-i18n="lic.okT">可以</span></h3><ul><li data-i18n="lic.ok1">个人在自己的电脑上免费安装和使用</li><li data-i18n="lic.ok2">为个人观看生成、保存字幕</li><li data-i18n="lic.ok3">在家庭媒体服务器上使用 Emby 插件</li></ul></div>
+      <div class="lic no reveal"><h3>✗ <span data-i18n="lic.noT">不可以</span></h3><ul><li data-i18n="lic.no1">任何商业用途，包括企业 / 机构内部使用</li><li data-i18n="lic.no2">出售、出租、收费分发或捆绑到商业产品</li><li data-i18n="lic.no3">去除版权信息后重新发布</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 Subtitle Studio · <span data-i18n="foot.lic">仅限个人非商业使用</span></div>
+    <div data-i18n="foot.oss">基于开源项目：whisper.cpp · Whisper.net · llama.cpp · 腾讯混元 Hy-MT2 · mpv · FFmpeg · Silero VAD（各组件遵循其自身的开源许可）</div>
+    <div><a id="ghLink" href="#">GitHub</a></div>
+  </div>
+</footer>
+
+<script>
+// ---------------- 文案（中 / 英）----------------
+const EN = {
+  "brand": "Subtitle Studio",
+  "nav.features": "Features", "nav.how": "How it works", "nav.emby": "Emby plugin", "nav.faq": "FAQ", "nav.download": "Download",
+  "hero.pill": "New in v1.4: playlists · favorites · picture enhancement · black-bar removal",
+  "hero.t1": "Any video.", "hero.t2": "Subtitled in your language as it plays.",
+  "hero.sub": "Open a video and just watch: on-device AI listens to the dialogue and translates it into subtitles, buffering 3 minutes ahead. No uploads, no subscription, works offline.",
+  "hero.cta": "Download free for Windows", "hero.more": "See what it does",
+  "hero.m1": "Free for personal use", "hero.m2": "Runs without a GPU", "hero.m3": "Offline translation", "hero.m4": "Windows 10 / 11",
+  "demo.title": "Evening Breeze.mkv · Subtitle Studio", "demo.open": " Open", "demo.target": "Translate to English", "demo.subs": " Subtitles: on",
+  "demo.bi": "Dual", "demo.tr": "Translated", "demo.fav": "★ Favorite", "demo.list": "☰ Library", "demo.live": "Live AI subtitles",
+  "demo.rec": "Recognized", "demo.trd": "Translated", "demo.full": "⛶ Fullscreen",
+  "stats.1": "GPU recognition speed (× real time)", "stats.2": "From opening to first subtitle", "stats.3": "Buffered ahead — seek without waiting", "stats.4": "No subscription, no per-minute fees",
+  "f.eyebrow": "Features", "f.title": "One player that understands every video for you",
+  "f.lead": "J-dramas, K-variety, US series, documentaries, lectures, home videos… if it has no subtitles, now it does.",
+  "f.1t": "Translate while playing — subtitles in seconds",
+  "f.1d": "Local files can be read ahead, so there's no need for low-quality streaming recognition: it listens 40 s at a time, cuts at natural pauses and translates right away, keeping ~3 minutes buffered. The progress bar shows what's recognized (blue) and translated (green).",
+  "f.2t": "Everything runs on your PC", "f.2d": "Speech recognition (whisper.cpp) and translation (Tencent Hunyuan Hy-MT2) run locally. Nothing is uploaded, no account, works offline.",
+  "f.3t": "A dozen-plus languages → Chinese / English", "f.3d": "The language is detected from the audio alone. English, Japanese, Korean, French, German, Spanish, Russian, Thai, Vietnamese… choose which to translate and into Simplified, Traditional Chinese or English.",
+  "f.4t": "Dual / translated / original in one click", "f.4d": "A small line of the original under each translation — great for language learners. Font size, visibility and subtitle rotation are separate; long lines wrap automatically.",
+  "f.5t": "Batch a whole folder", "f.5d": "Tick, sort, pause and resume — even after a restart. Right-click any folder to start. The .srt files work in any player, Emby or Plex.",
+  "f.6t": "Subtitles you make are kept", "f.6d": "Stop halfway and it's saved; next time it continues from where you were. Videos that already have subtitles are used as-is, never redone.",
+  "f.7t": "Picture enhancement & black-bar removal", "f.7d": "Normal / Vivid / Cinema / Game presets, Smart HD sharpening, brightness, contrast and saturation, automatic letterbox cropping, one-click aspect ratios.",
+  "f.8t": "Playlists · history · favorites", "f.8d": "Drop a folder in to make a playlist that plays on automatically; history remembers where you stopped; favorite anything with one click.",
+  "f.9t": "Thoughtful details", "f.9d": "Drag the window from anywhere, double-click to pause, right-click menu, 0.5×–3× speed, click the speaker to mute, very long file names, Explorer context menu, English / Chinese / Japanese UI.",
+  "h.eyebrow": "How it works", "h.title": "More accurate than live captions, faster than “generate first, watch later”",
+  "h.1t": "Read ahead", "h.1d": "FFmpeg decodes audio only, 40 seconds at a time ahead of the playhead.",
+  "h.2t": "Find the speech", "h.2d": "Silero VAD skips music and silence and cuts at natural pauses, reducing hallucinations.",
+  "h.3t": "Recognize + translate", "h.3d": "Whisper transcribes; Hunyuan or DeepSeek translates with context so names stay consistent.",
+  "h.4t": "Show seamlessly", "h.4d": "Subtitles refresh live on screen; after a seek, the new spot is filled in within seconds.",
+  "q.eyebrow": "Right-click menu", "q.title": "Picture, speed and aspect ratio — all one right-click away",
+  "q.1": "<b>Picture presets</b>: Normal, Vivid, Cinema, Game — plus brightness / contrast / saturation / gamma",
+  "q.2": "<b>Smart HD</b>: high-quality scaling + debanding + adaptive sharpening; older and low-res videos look clearly sharper",
+  "q.3": "<b>Remove black bars</b>: detects letterboxing baked into the picture and crops it away",
+  "q.4": "<b>Aspect ratio</b>: original / 16:9 / 4:3 / 21:9 / 2.35:1… fit, crop or stretch to the window, or lock the window to the video's shape",
+  "q.5": "<b>Playback speed</b>: 0.5× to 3×, fine-tune with <kbd>[</kbd> <kbd>]</kbd>",
+  "ctx.pause": "⏸ Pause", "ctx.speed": "Playback speed (1.25×)", "ctx.q": "Picture quality", "ctx.ar": "Aspect ratio", "ctx.crop": "Remove black bars", "ctx.subs": "Subtitles",
+  "ctx.fav": "★ Remove from favorites", "ctx.next": "Next (PgDn)", "ctx.auto": "Auto-play next", "ctx.full": "Fullscreen",
+  "ctx.q1": "Normal", "ctx.q2": "Vivid", "ctx.q3": "Cinema", "ctx.q4": "Game", "ctx.hd": "Smart HD", "ctx.b": "Brightness +2", "ctx.c": "Contrast +10", "ctx.s": "Saturation +30",
+  "t.hw": "Hardware", "t.speed": "Recognition", "t.film": "Whole 2-hour film",
+  "t.r1": "15–40× real time (measured)", "t.f1": "about 3–8 min", "t.h2": "8 GB-class GPU", "t.f2": "about 10–15 min", "t.h3": "8+ core CPU · small", "t.f3": "about 20–40 min",
+  "t.h4": "Low-power CPU", "t.f4": "1 hour+ (generate ahead)",
+  "e.eyebrow": "Bonus · Emby plugin", "e.title": "Your Emby library subtitles new movies automatically",
+  "e.lead": "Works on a NAS without a GPU: recognition on the CPU, translation with the built-in offline model or DeepSeek — or borrow the GPU of a PC on your network running Subtitle Studio. It only works when needed:",
+  "e.r1t": "English movies", "e.r1d": "Skipped if English subtitles exist; otherwise English subtitles are created",
+  "e.r2t": "Foreign movies", "e.r2d": "Chinese subtitles created when missing; an existing English subtitle is simply translated",
+  "e.r3t": "Chinese movies", "e.r3d": "Skipped. Every rule is configurable in the settings page",
+  "d.eyebrow": "Download", "d.title": "Make every video speak your language — today",
+  "d.lead": "Free forever for personal use. The installer includes the player and both AI engines; the right models are downloaded for your hardware on first use.",
+  "d.win": "Windows desktop app", "d.winS": "v1.4.0 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
+  "d.req": "Windows 10 / 11 64-bit · a dedicated GPU makes it faster (NVIDIA / AMD / Intel), but it isn't required · all versions on GitHub Releases",
+  "faq.eyebrow": "FAQ", "faq.title": "Questions you might have",
+  "faq.1q": "Is it really free? What's the catch?", "faq.1a": "Completely free for personal use — no ads, no account, no time limits. Any commercial use is prohibited (including internal use at a company, use in a paid service, resale or redistribution in a bundle).",
+  "faq.2q": "Do I need a graphics card?", "faq.2d": "No. It checks your hardware on first start and picks settings: an 8-core-plus CPU handles live translation fine; on weaker CPUs, generate whole-film subtitles ahead of time.",
+  "faq.3q": "Are my videos uploaded?", "faq.3a": "No. By default recognition and translation happen on your PC. Only if you choose an online API like DeepSeek is subtitle text (never video or audio) sent to that service.",
+  "faq.4q": "How good is the translation?", "faq.4a": "The built-in Tencent Hunyuan Hy-MT2 is a dedicated translation model and handles everyday dialogue well. For better names, slang and long sentences, switch to Hunyuan 7B or the DeepSeek API (a few cents per movie).",
+  "faq.5q": "Can other players use the subtitles?", "faq.5a": "Yes. They're saved next to the video as name.language.srt, which PotPlayer, VLC, mpv, Emby and Plex load directly. You can also mark them hidden to keep folders tidy.",
+  "lic.okT": "You may", "lic.ok1": "Install and use it free on your own computers", "lic.ok2": "Create and keep subtitles for personal viewing", "lic.ok3": "Use the Emby plugin on your home media server",
+  "lic.noT": "You may not", "lic.no1": "Use it commercially, including inside companies or organizations", "lic.no2": "Sell, rent, distribute for a fee or bundle it with commercial products", "lic.no3": "Redistribute it with copyright notices removed",
+  "foot.lic": "Personal, non-commercial use only",
+  "foot.oss": "Built on open source: whisper.cpp · Whisper.net · llama.cpp · Tencent Hunyuan Hy-MT2 · mpv · FFmpeg · Silero VAD (each under its own license)",
+};
+// 演示字幕：[原文, 中文, 英文]
+const LINES = [
+  ["今夜は風が気持ちいいね。", "今晚的风好舒服啊。", "The breeze feels so nice tonight."],
+  ["ずっとこの街にいたいな。", "真想一直待在这座城市。", "I wish I could stay in this town forever."],
+  ["Tu te souviens de notre premier été ?", "你还记得我们的第一个夏天吗？", "Do you remember our first summer?"],
+  ["별이 정말 많다.", "星星真多啊。", "There are so many stars."],
+  ["No matter where you go, I'll find you.", "无论你去哪里，我都会找到你。", "No matter where you go, I'll find you."],
+];
+
+// ---------------- 语言 ----------------
+const ZH = {};
+document.querySelectorAll("[data-i18n]").forEach(el => ZH[el.dataset.i18n] = el.textContent);
+document.querySelectorAll("[data-i18n-html]").forEach(el => ZH[el.dataset.i18nHtml] = el.innerHTML);
+let lang;
+function pickLang() {
+  try { const s = localStorage.getItem("ss-lang"); if (s === "zh" || s === "en") return s; } catch (e) {}
+  const prefs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
+  return /^zh/i.test(prefs[0]) ? "zh" : "en";
+}
+function applyLang(l) {
+  lang = l;
+  document.documentElement.lang = l === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.dataset.i18n; el.textContent = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
+  document.querySelectorAll("[data-i18n-html]").forEach(el => { const k = el.dataset.i18nHtml; el.innerHTML = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
+  document.getElementById("langBtn").textContent = l === "zh" ? "EN" : "中文";
+  document.title = l === "zh" ? "边播边译 Subtitle Studio · 任何视频，边播边出中文字幕" : "Subtitle Studio · Live AI subtitles for any video";
+}
+document.getElementById("langBtn").onclick = () => { const l = lang === "zh" ? "en" : "zh"; try { localStorage.setItem("ss-lang", l); } catch (e) {} applyLang(l); };
+applyLang(pickLang());
+
+// ---------------- 下载链接（GitHub Pages 地址里取用户名）----------------
+const OWNER = location.hostname.endsWith(".github.io") ? location.hostname.split(".")[0] : "thundom";
+const REPO = "subtitle-studio";
+const REL = `https://github.com/${OWNER}/${REPO}/releases`;
+document.getElementById("dlWin").href = `${REL}/latest/download/SubtitleStudio-Setup.exe`;
+document.getElementById("dlEmby").href = `${REL}/latest/download/Emby.AISubtitles.zip`;
+document.getElementById("ghLink").href = `https://github.com/${OWNER}/${REPO}`;
+document.querySelectorAll(".dl-link").forEach(a => a.href = "#download");
+
+// ---------------- 演示播放器 ----------------
+const subTr = document.getElementById("subTr"), subOr = document.getElementById("subOr");
+const segRec = document.getElementById("segRec"), segTr = document.getElementById("segTr"), head = document.getElementById("head");
+const timeEl = document.getElementById("time"), bufEl = document.getElementById("buf"), osd = document.getElementById("osd");
+const scene = document.getElementById("scene");
+for (let i = 0; i < 40; i++) { const s = document.createElement("div"); s.className = "star"; s.style.left = Math.random() * 100 + "%"; s.style.top = Math.random() * 55 + "%"; s.style.animationDelay = Math.random() * 3 + "s"; scene.appendChild(s); }
+const DUR = 6750; let t = 724, rec = 724, trn = 724;
+const fmt = s => { s = Math.floor(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return `${h}:${String(m).padStart(2, "0")}:${String(x).padStart(2, "0")}`; };
+function tick() {
+  t += 1; rec = Math.min(DUR, Math.max(rec, t) + 6); trn = Math.min(rec, Math.max(trn, t) + 4.6);
+  if (rec - t > 200) rec = t + 200; if (trn - t > 180) trn = t + 180;
+  segRec.style.width = rec / DUR * 100 + "%"; segTr.style.width = trn / DUR * 100 + "%"; head.style.left = t / DUR * 100 + "%";
+  timeEl.textContent = `${fmt(t)} / ${fmt(DUR)}`;
+  bufEl.textContent = lang === "zh" ? `字幕已缓冲 ${Math.round(trn - t)} 秒` : `${Math.round(trn - t)} s buffered`;
+}
+setInterval(tick, 260); tick();
+let li = 0;
+async function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+async function typeLine() {
+  const [orig, zh, en] = LINES[li % LINES.length]; li++;
+  const target = lang === "zh" ? zh : en;
+  subOr.textContent = orig; subTr.innerHTML = "";
+  for (let i = 1; i <= target.length; i++) { subTr.innerHTML = target.slice(0, i).replace(/&/g, "&amp;").replace(/</g, "&lt;") + '<span class="caret"></span>'; await sleep(lang === "zh" ? 55 : 22); }
+  subTr.textContent = target;
+  await sleep(2400);
+  if (li % 3 === 0) { osd.textContent = lang === "zh" ? ["画质：鲜艳", "播放速度 1.25×", "已去黑边"][li / 3 % 3 | 0] : ["Picture: Vivid", "Speed 1.25×", "Black bars removed"][li / 3 % 3 | 0]; osd.classList.add("show"); setTimeout(() => osd.classList.remove("show"), 1600); }
+  typeLine();
+}
+typeLine();
+
+// ---------------- 卡片光效 / 出现动画 ----------------
+document.querySelectorAll(".card").forEach(c => c.addEventListener("pointermove", e => { const r = c.getBoundingClientRect(); c.style.setProperty("--mx", e.clientX - r.left + "px"); c.style.setProperty("--my", e.clientY - r.top + "px"); }));
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+document.querySelectorAll(".reveal").forEach((el, i) => { el.style.transitionDelay = (i % 4) * 70 + "ms"; io.observe(el); });
+</script>
+</body>
+</html>
