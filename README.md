@@ -6,7 +6,7 @@
 
 **Navo Player — the player that generates subtitles in real time.** On-device speech recognition and translation while the video plays — no uploads, no subscription, works offline.
 
-🌐 **官网 / Website:** https://thundom.github.io/subtitle-studio/
+🌐 **官网 / Website:** https://thundom.github.io/navo-player/
 ⬇️ **下载 / Download:** [Releases](../../releases/latest)
 
 | | |

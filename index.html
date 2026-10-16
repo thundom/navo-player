@@ -7,7 +7,7 @@
 <meta name="description" content="Navo Player — the player that generates subtitles in real time. Watch any video with live AI subtitles in your language — speech recognition and translation run on your own PC. Free for personal use.">
 <meta property="og:title" content="Navo Player · The player that generates subtitles in real time">
 <meta property="og:description" content="Live AI subtitles for any video, translated while it plays. Runs locally, no subscription.">
-<meta property="og:image" content="https://thundom.github.io/subtitle-studio/logo.png">
+<meta property="og:image" content="https://thundom.github.io/navo-player/logo.png">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <link rel="icon" href="logo.png" sizes="256x256" type="image/png">
 <link rel="apple-touch-icon" href="logo.png">
@@ -613,7 +613,7 @@ applyLang(pickLang());
 
 // ---------------- 下载链接（GitHub Pages 地址里取用户名）----------------
 const OWNER = location.hostname.endsWith(".github.io") ? location.hostname.split(".")[0] : "thundom";
-const REPO = "subtitle-studio";
+const REPO = "navo-player";
 const REL = `https://github.com/${OWNER}/${REPO}/releases`;
 document.getElementById("dlWin").href = `${REL}/latest/download/NavoPlayer-Setup.exe`;
 document.getElementById("dlEmby").href = `${REL}/latest/download/Emby.AISubtitles.zip`;
