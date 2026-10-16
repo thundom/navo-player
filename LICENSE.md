@@ -1,11 +1,11 @@
-# 边播边译 Navo Player 许可协议 / License Agreement
+# 快译全能播放器 Navo Player 许可协议 / License Agreement
 
-版权所有 © 2026 边播边译 Navo Player 作者。保留所有权利。
+版权所有 © 2026 快译全能播放器 Navo Player 作者。保留所有权利。
 Copyright © 2026 the Navo Player author. All rights reserved.
 
 ## 中文
 
-本协议适用于「边播边译 Navo Player」桌面程序（曾用名 Subtitle Studio）、Emby 插件「AI 字幕生成」及其安装包（以下统称"本软件"）。
+本协议适用于「快译全能播放器 Navo Player」桌面程序（曾用名「边播边译」、Subtitle Studio）、Emby 插件「AI 字幕生成」及其安装包（以下统称"本软件"）。
 
 **允许：**
 

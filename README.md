@@ -1,4 +1,6 @@
-# 边播边译 Navo Player
+<p align="center"><img src="logo.png" width="112" alt="Navo Player"></p>
+
+# 快译全能播放器 Navo Player
 
 **任何视频，边播边出母语字幕。** 本机 AI 一边识别台词、一边翻译，提前缓冲约 3 分钟，不上传、不订阅、断网可用。
 
@@ -9,8 +11,11 @@
 
 | | |
 |---|---|
-| 🪟 Windows 桌面版 / desktop app | `SubtitleStudio-Setup.exe` |
+| 🪟 Windows 桌面版 / desktop app | `NavoPlayer-Setup.exe` |
 | 📺 Emby 插件 / plugin | `Emby.AISubtitles.zip` |
+
+> 1.5.2 起中文名由「边播边译」改为「快译全能播放器」。从旧版升级：直接安装新版，设置、播放记录和模型会自动迁移，然后可以在 Windows「设置 → 应用」里卸载旧的「边播边译」。
+> From 1.5.2 the app is installed as Navo Player. Upgrading from 1.5.1: install the new version (settings, history and models move over automatically), then uninstall the old "边播边译 Navo Player" entry in Windows Settings → Apps.
 
 ## 主要功能 / Highlights
 
@@ -20,6 +25,7 @@
 - 文件夹批量生成、断点续做、资源管理器右键菜单 · Folder batch with resume, Explorer context menu
 - 仿 PotPlayer 的极简界面，秒播；字幕字体 / 颜色 / 位置随心调 · Clean PotPlayer-style UI with instant play; subtitle font / color / position
 - 播放列表、播放历史、收藏；画质模板、智能高清、去黑边、画面比例、变速、对白增强 · Playlists, history, favorites; picture presets, Smart HD, black-bar removal, aspect ratios, speed, dialogue boost
+- 一键在线升级：主菜单「关于 / 检查更新…」，安装包自动校验 · One-click updates from "About / Check for updates…", with installer verification
 - Emby 插件：新片入库按规则自动生成字幕 · Emby plugin: auto-subtitles new library items by rules
 - 界面：简体 / 繁體 / English / 日本語 · UI in Simplified/Traditional Chinese, English, Japanese
 

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Navo Player icon: same geometry as art/IconGen in the app source. -->
+  <defs>
+    <linearGradient id="np-bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2C3358"/><stop offset="1" stop-color="#0E1018"/></linearGradient>
+    <radialGradient id="np-glow" cx="128" cy="98" r="98" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#3DE8B0" stop-opacity=".24"/><stop offset="1" stop-color="#3DE8B0" stop-opacity="0"/></radialGradient>
+    <linearGradient id="np-edge" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <linearGradient id="np-play" x1="95" y1="45" x2="185" y2="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#8BF8D6"/><stop offset="1" stop-color="#1FC07A"/></linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#np-bg)"/>
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#np-glow)"/>
+  <rect x="9" y="9" width="238" height="238" rx="55" fill="none" stroke="url(#np-edge)" stroke-width="2"/>
+  <path d="M111 62L111 124L164.7 93Z" fill="url(#np-play)" stroke="url(#np-play)" stroke-width="24" stroke-linejoin="round"/>
+  <path d="M72 172H184" stroke="#fff" stroke-opacity=".95" stroke-width="16" stroke-linecap="round"/>
+  <path d="M98 195H158" stroke="#fff" stroke-opacity=".47" stroke-width="10" stroke-linecap="round"/>
+</svg>

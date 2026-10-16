@@ -3,11 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>边播边译 · Navo Player</title>
+<title>快译全能播放器 · Navo Player</title>
 <meta name="description" content="Navo Player — the player that generates subtitles in real time. Watch any video with live AI subtitles in your language — speech recognition and translation run on your own PC. Free for personal use.">
 <meta property="og:title" content="Navo Player · The player that generates subtitles in real time">
 <meta property="og:description" content="Live AI subtitles for any video, translated while it plays. Runs locally, no subscription.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%235b5bf7'/%3E%3Cpath d='M18 40h28M22 48h20' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M26 16l14 9-14 9z' fill='white'/%3E%3C/svg%3E">
+<meta property="og:image" content="https://thundom.github.io/subtitle-studio/logo.png">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="icon" href="logo.png" sizes="256x256" type="image/png">
+<link rel="apple-touch-icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -38,7 +41,7 @@ a { color: inherit; text-decoration: none; }
 nav { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px); background: rgba(7,7,12,.6); border-bottom: 1px solid var(--line); }
 nav .wrap { display: flex; align-items: center; gap: 28px; height: 64px; }
 .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -.02em; }
-.logo svg { width: 30px; height: 30px; }
+.logo img { width: 32px; height: 32px; display: block; }
 nav .links { display: flex; gap: 22px; margin-left: auto; font-size: 14px; color: var(--dim); }
 nav .links a:hover { color: var(--fg); }
 .lang { border: 1px solid var(--line); background: var(--card); color: var(--fg); border-radius: 999px; padding: 6px 14px; font: 600 13px var(--font); cursor: pointer; }
@@ -141,6 +144,9 @@ h2 { font-size: clamp(30px, 4.6vw, 52px); line-height: 1.12; font-weight: 900; l
 .card p { color: var(--dim); font-size: 15px; margin-top: 8px; }
 .card.wide { grid-column: span 2; }
 @media (max-width: 640px) { .card.wide { grid-column: auto; } }
+.card.full { grid-column: 1 / -1; display: flex; gap: 22px; align-items: center; }
+.card.full .ic { flex: none; margin-bottom: 0; }
+@media (max-width: 640px) { .card.full { display: block; } .card.full .ic { margin-bottom: 18px; } }
 
 /* 流程 */
 .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 48px; counter-reset: s; }
@@ -229,8 +235,7 @@ footer a:hover { color: var(--fg); }
 .papp { display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #eee; height: 100%; }
 .papp b { font-weight: 700; }
 .papp em { font-style: normal; color: #888; font-size: 11px; margin-top: -3px; }
-.plogo { width: 18px; height: 18px; border-radius: 5px; background: linear-gradient(135deg, #7c6cff, #22d3a6); position: relative; display: inline-block; }
-.plogo::after { content: ""; position: absolute; left: 7px; top: 4px; border-left: 6px solid #fff; border-top: 4px solid transparent; border-bottom: 4px solid transparent; }
+.plogo { width: 18px; height: 18px; display: inline-block; background: url("logo.svg") center/contain no-repeat; }
 .pname { flex: 1; text-align: center; color: #999; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pwin { display: flex; height: 100%; }
 .pwin .w { width: 40px; height: 100%; display: grid; place-items: center; color: #ccc; }
@@ -292,8 +297,8 @@ footer a:hover { color: var(--fg); }
 <nav>
   <div class="wrap">
     <a class="logo" href="#top">
-      <svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7c6cff"/><stop offset="1" stop-color="#22d3a6"/></linearGradient></defs><rect width="64" height="64" rx="16" fill="url(#lg)"/><path d="M26 15l15 9.5L26 34z" fill="#fff"/><path d="M16 42h32M22 50h20" stroke="#fff" stroke-width="5" stroke-linecap="round"/></svg>
-      <span data-i18n="brand">边播边译</span>
+      <img src="logo.svg" alt="">
+      <span data-i18n="brand">快译全能播放器</span>
     </a>
     <div class="links">
       <a href="#features" data-i18n="nav.features">功能</a>
@@ -308,7 +313,7 @@ footer a:hover { color: var(--fg); }
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.5 全新界面：仿 PotPlayer 极简设计 · 秒播 · 字幕样式随心调 · 智能高清</span></div>
+    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.5.2 新名字「快译全能播放器」· 全新图标 · 一键在线升级 · 滚轮调音量更顺手</span></div>
     <h1 class="reveal"><span data-i18n="hero.t1">任何视频，</span><br><span class="grad" data-i18n="hero.t2">边播边出母语字幕</span></h1>
     <p class="sub reveal" data-i18n="hero.sub">打开视频就能看：本机 AI 一边听台词、一边翻译成中文字幕，提前缓冲 3 分钟。不用上传、不用订阅、没有网络也能用。</p>
     <div class="cta reveal">
@@ -325,8 +330,8 @@ footer a:hover { color: var(--fg); }
     <div class="stage reveal">
       <div class="player" id="demo">
         <div class="ptitle">
-          <span class="papp"><i class="plogo"></i><b data-i18n="brand">边播边译</b><em>⌄</em></span>
-          <span class="pname" data-i18n="demo.title">晚风.mkv · 边播边译</span>
+          <span class="papp"><i class="plogo"></i><b data-i18n="brand">快译全能播放器</b><em>⌄</em></span>
+          <span class="pname" data-i18n="demo.title">晚风.mkv · 快译全能播放器</span>
           <span class="pwin"><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3h8M9.5 3v7l-4 4h13l-4-4V3M12 14v7"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M5 13h14"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5.5" y="5.5" width="13" height="13"/></svg></span><span class="w"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg></span><span class="w x"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span></span>
         </div>
         <div class="screen">
@@ -380,6 +385,7 @@ footer a:hover { color: var(--fg); }
       <div class="card reveal"><div class="ic">🎬</div><h3 data-i18n="f.7t">智能高清与去黑边</h3><p data-i18n="f.7d">显卡自适应锐化三档可调，细节立刻清楚；普通 / 鲜艳 / 电影 / 游戏模板，亮度对比度饱和度色调微调；自动裁掉画面里的黑边。</p></div>
       <div class="card reveal"><div class="ic">⭐</div><h3 data-i18n="f.8t">播放列表 · 历史 · 收藏</h3><p data-i18n="f.8d">拖进文件夹就是播放列表，播完自动下一个；播放历史记得看到哪；喜欢的视频一键收藏。</p></div>
       <div class="card reveal"><div class="ic">🖱️</div><h3 data-i18n="f.9t">像 PotPlayer 一样顺手</h3><p data-i18n="f.9d">极简深色界面，按住任意处拖窗口、双击暂停、滚轮调音量（最高 200%）、对白增强、A-B 循环、截图、逐帧、置顶、超长文件名，中 / 繁 / 英 / 日界面。</p></div>
+      <div class="card full reveal"><div class="ic">🔄</div><div><h3 data-i18n="f.12t">一键在线升级</h3><p data-i18n="f.12d">主菜单「关于 / 检查更新…」可以看到当前版本和更新历史；有新版本时一键下载安装，安装包按 GitHub 提供的 SHA-256 自动校验，装好后自动重新打开，设置和字幕都保留。</p></div></div>
     </div>
   </div>
 </section>
@@ -447,7 +453,7 @@ footer a:hover { color: var(--fg); }
     <div class="emby reveal">
       <div class="eyebrow" style="color:#7fdc74" data-i18n="e.eyebrow">附赠 · Emby 插件</div>
       <h2 data-i18n="e.title">家里的 Emby 媒体库，新片入库自动配好字幕</h2>
-      <p class="lead" data-i18n="e.lead">没有显卡的 NAS 也能用：语音识别走 CPU，翻译用内置离线模型或 DeepSeek。也能借用局域网里装了边播边译的电脑显卡。只在需要时才生成：</p>
+      <p class="lead" data-i18n="e.lead">没有显卡的 NAS 也能用：语音识别走 CPU，翻译用内置离线模型或 DeepSeek。也能借用局域网里装了快译全能播放器的电脑显卡。只在需要时才生成：</p>
       <div class="rules">
         <div class="rule"><b data-i18n="e.r1t">英语片</b><span data-i18n="e.r1d">有英文字幕就跳过；没有就生成英文字幕</span></div>
         <div class="rule"><b data-i18n="e.r2t">外语片</b><span data-i18n="e.r2d">没有中文字幕时生成；已有英文字幕就直接翻译它</span></div>
@@ -462,9 +468,9 @@ footer a:hover { color: var(--fg); }
     <div class="download reveal">
       <div class="eyebrow" data-i18n="d.eyebrow">下载</div>
       <h2 data-i18n="d.title">现在就让你的视频开口说中文</h2>
-      <p class="lead" data-i18n="d.lead">个人使用永久免费。安装包内含播放器、识别引擎和翻译引擎，首次使用按硬件自动下载合适的模型。</p>
+      <p class="lead" data-i18n="d.lead">个人使用永久免费。安装包内含播放器、识别引擎和翻译引擎，首次使用按硬件自动下载合适的模型；以后的新版本在程序里一键升级。</p>
       <div class="dl-grid">
-        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.5.1 · 安装包约 132MB</small></div></a>
+        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.5.2 · 安装包约 132MB</small></div></a>
         <a class="dl" id="dlEmby" href="#"><div class="ic">📺</div><div><b data-i18n="d.emby">Emby 插件</b><small data-i18n="d.embyS">v1.2.0 · Linux / Docker / NAS / Windows</small></div></a>
       </div>
       <p class="req" data-i18n="d.req">Windows 10 / 11 64 位 · 有独立显卡更快（NVIDIA / AMD / Intel 均可），没有也能用 · 所有历史版本见 GitHub Releases</p>
@@ -482,6 +488,8 @@ footer a:hover { color: var(--fg); }
       <details class="reveal"><summary data-i18n="faq.3q">会上传我的视频吗？</summary><p data-i18n="faq.3a">不会。默认的识别和翻译都在本机完成。只有你主动选择 DeepSeek 等在线翻译接口时，才会把字幕文字（不是视频和声音）发给对应的服务。</p></details>
       <details class="reveal"><summary data-i18n="faq.4q">翻译质量怎么样？</summary><p data-i18n="faq.4a">内置的腾讯混元 Hy-MT2 是专门的翻译模型，日常对白通顺；追求更好的人名、俚语和长句，可以换成混元 7B 或 DeepSeek API（一部电影大约几毛钱）。</p></details>
       <details class="reveal"><summary data-i18n="faq.5q">生成的字幕能给别的播放器用吗？</summary><p data-i18n="faq.5a">可以。字幕以 影片名.语言.srt 保存在视频旁边，PotPlayer、VLC、mpv、Emby、Plex 都能直接加载；也可以设为隐藏文件，文件夹更整洁。</p></details>
+      <details class="reveal"><summary data-i18n="faq.6q">怎么升级到新版本？</summary><p data-i18n="faq.6a">主菜单 →「关于 / 检查更新…」→「检查更新」，有新版本时点「下载并安装」即可：安装包会自动校验，装好后程序自动重新打开。也可以随时从本页下载最新安装包，直接覆盖安装。</p></details>
+      <details class="reveal"><summary data-i18n="faq.7q">「边播边译」改名了吗？</summary><p data-i18n="faq.7a">是的，从 1.5.2 起中文名改为「快译全能播放器」，英文名仍是 Navo Player。从 1.5.1 升级时直接安装新版，设置、播放记录、截图和已下载的模型会自动迁移；之后可以在 Windows「设置 → 应用」里卸载旧的「边播边译」。</p></details>
     </div>
 
     <div class="license">
@@ -493,7 +501,7 @@ footer a:hover { color: var(--fg); }
 
 <footer>
   <div class="wrap">
-    <div>© 2026 <span data-i18n="brand">边播边译</span> · <span data-i18n="foot.lic">仅限个人非商业使用</span></div>
+    <div>© 2026 <span data-i18n="brand">快译全能播放器</span> ·<span data-i18n="foot.lic">仅限个人非商业使用</span></div>
     <div data-i18n="foot.oss">基于开源项目：whisper.cpp · Whisper.net · llama.cpp · 腾讯混元 Hy-MT2 · mpv · FFmpeg · Silero VAD（各组件遵循其自身的开源许可）</div>
     <div><a id="ghLink" href="#">GitHub</a></div>
   </div>
@@ -504,7 +512,7 @@ footer a:hover { color: var(--fg); }
 const EN = {
   "brand": "Navo Player",
   "nav.features": "Features", "nav.how": "How it works", "nav.emby": "Emby plugin", "nav.faq": "FAQ", "nav.download": "Download",
-  "hero.pill": "v1.5 redesign: clean PotPlayer-style UI · instant play · subtitle styling · Smart HD",
+  "hero.pill": "v1.5.2: new icon · one-click online updates · smoother wheel volume",
   "hero.t1": "The player that", "hero.t2": "generates subtitles in real time.",
   "hero.sub": "Open a video and just watch: on-device AI listens to the dialogue and translates it into subtitles, buffering 3 minutes ahead. No uploads, no subscription, works offline.",
   "hero.cta": "Download free for Windows", "hero.more": "See what it does",
@@ -527,6 +535,7 @@ const EN = {
   "f.7t": "Smart HD & black-bar removal", "f.7d": "GPU adaptive sharpening in three strengths for instantly crisper detail; Normal / Vivid / Cinema / Game presets, brightness, contrast, saturation and hue; automatic letterbox cropping.",
   "f.8t": "Playlists · history · favorites", "f.8d": "Drop a folder in to make a playlist that plays on automatically; history remembers where you stopped; favorite anything with one click.",
   "f.9t": "As smooth as PotPlayer", "f.9d": "Minimal dark UI: drag the window from anywhere, double-click to pause, wheel for volume (up to 200%), dialogue boost, A-B loop, screenshots, frame step, always-on-top, very long file names, English / Chinese / Japanese UI.",
+  "f.12t": "One-click online updates", "f.12d": "\"About / Check for updates…\" in the main menu shows your version and the version history. When a new version is out, download and install it in one click — the installer is verified against GitHub's SHA-256, the player reopens afterwards, and your settings and subtitles stay.",
   "h.eyebrow": "How it works", "h.title": "More accurate than live captions, faster than “generate first, watch later”",
   "h.1t": "Read ahead", "h.1d": "FFmpeg decodes audio only, 40 seconds at a time ahead of the playhead.",
   "h.2t": "Find the speech", "h.2d": "Silero VAD skips music and silence and cuts at natural pauses, reducing hallucinations.",
@@ -556,8 +565,8 @@ const EN = {
   "e.r2t": "Foreign movies", "e.r2d": "Chinese subtitles created when missing; an existing English subtitle is simply translated",
   "e.r3t": "Chinese movies", "e.r3d": "Skipped. Every rule is configurable in the settings page",
   "d.eyebrow": "Download", "d.title": "Make every video speak your language — today",
-  "d.lead": "Free forever for personal use. The installer includes the player and both AI engines; the right models are downloaded for your hardware on first use.",
-  "d.win": "Windows desktop app", "d.winS": "v1.5.1 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
+  "d.lead": "Free forever for personal use. The installer includes the player and both AI engines; the right models are downloaded for your hardware on first use, and future versions update in one click from inside the app.",
+  "d.win": "Windows desktop app", "d.winS": "v1.5.2 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
   "d.req": "Windows 10 / 11 64-bit · a dedicated GPU makes it faster (NVIDIA / AMD / Intel), but it isn't required · all versions on GitHub Releases",
   "faq.eyebrow": "FAQ", "faq.title": "Questions you might have",
   "faq.1q": "Is it really free? What's the catch?", "faq.1a": "Completely free for personal use — no ads, no account, no time limits. Any commercial use is prohibited (including internal use at a company, use in a paid service, resale or redistribution in a bundle).",
@@ -565,6 +574,8 @@ const EN = {
   "faq.3q": "Are my videos uploaded?", "faq.3a": "No. By default recognition and translation happen on your PC. Only if you choose an online API like DeepSeek is subtitle text (never video or audio) sent to that service.",
   "faq.4q": "How good is the translation?", "faq.4a": "The built-in Tencent Hunyuan Hy-MT2 is a dedicated translation model and handles everyday dialogue well. For better names, slang and long sentences, switch to Hunyuan 7B or the DeepSeek API (a few cents per movie).",
   "faq.5q": "Can other players use the subtitles?", "faq.5a": "Yes. They're saved next to the video as name.language.srt, which PotPlayer, VLC, mpv, Emby and Plex load directly. You can also mark them hidden to keep folders tidy.",
+  "faq.6q": "How do I update?", "faq.6a": "Main menu → \"About / Check for updates…\" → \"Check for updates\", then \"Download and install\" when a new version is available. The installer is verified and the player reopens when it's done. You can also download the latest installer from this page and install over the top.",
+  "faq.7q": "Did the app get a new name?", "faq.7a": "Its Chinese name changed from 边播边译 to 快译全能播放器 in 1.5.2; the English name is still Navo Player. When upgrading from 1.5.1, just install the new version — settings, history, screenshots and downloaded models move over automatically. Afterwards you can uninstall the old \"边播边译 Navo Player\" entry in Windows Settings → Apps.",
   "lic.okT": "You may", "lic.ok1": "Install and use it free on your own computers", "lic.ok2": "Create and keep subtitles for personal viewing", "lic.ok3": "Use the Emby plugin on your home media server",
   "lic.noT": "You may not", "lic.no1": "Use it commercially, including inside companies or organizations", "lic.no2": "Sell, rent, distribute for a fee or bundle it with commercial products", "lic.no3": "Redistribute it with copyright notices removed",
   "foot.lic": "Personal, non-commercial use only",
@@ -595,7 +606,7 @@ function applyLang(l) {
   document.querySelectorAll("[data-i18n]").forEach(el => { const k = el.dataset.i18n; el.textContent = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
   document.querySelectorAll("[data-i18n-html]").forEach(el => { const k = el.dataset.i18nHtml; el.innerHTML = l === "en" ? (EN[k] ?? ZH[k]) : ZH[k]; });
   document.getElementById("langBtn").textContent = l === "zh" ? "EN" : "中文";
-  document.title = l === "zh" ? "边播边译 · 任何视频，边播边出中文字幕" : "Navo Player · The player that generates subtitles in real time";
+  document.title = l === "zh" ? "快译全能播放器 · 任何视频，边播边出中文字幕" : "Navo Player · The player that generates subtitles in real time";
 }
 document.getElementById("langBtn").onclick = () => { const l = lang === "zh" ? "en" : "zh"; try { localStorage.setItem("ss-lang", l); } catch (e) {} applyLang(l); };
 applyLang(pickLang());
@@ -604,7 +615,7 @@ applyLang(pickLang());
 const OWNER = location.hostname.endsWith(".github.io") ? location.hostname.split(".")[0] : "thundom";
 const REPO = "subtitle-studio";
 const REL = `https://github.com/${OWNER}/${REPO}/releases`;
-document.getElementById("dlWin").href = `${REL}/latest/download/SubtitleStudio-Setup.exe`;
+document.getElementById("dlWin").href = `${REL}/latest/download/NavoPlayer-Setup.exe`;
 document.getElementById("dlEmby").href = `${REL}/latest/download/Emby.AISubtitles.zip`;
 document.getElementById("ghLink").href = `https://github.com/${OWNER}/${REPO}`;
 document.querySelectorAll(".dl-link").forEach(a => a.href = "#download");
