@@ -313,7 +313,7 @@ footer a:hover { color: var(--fg); }
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.5.2 新名字「快译全能播放器」· 全新图标 · 一键在线升级 · 滚轮调音量更顺手</span></div>
+    <div class="pill reveal"><span class="dot"></span><span data-i18n="hero.pill">v1.5.3 字幕直接内嵌进视频 · 人声增强 / 超重低音 / 环绕音效 · 色彩增强 · 识别更快</span></div>
     <h1 class="reveal"><span data-i18n="hero.t1">任何视频，</span><br><span class="grad" data-i18n="hero.t2">边播边出母语字幕</span></h1>
     <p class="sub reveal" data-i18n="hero.sub">打开视频就能看：本机 AI 一边听台词、一边翻译成中文字幕，提前缓冲 3 分钟。不用上传、不用订阅、没有网络也能用。</p>
     <div class="cta reveal">
@@ -470,7 +470,7 @@ footer a:hover { color: var(--fg); }
       <h2 data-i18n="d.title">现在就让你的视频开口说中文</h2>
       <p class="lead" data-i18n="d.lead">个人使用永久免费。安装包内含播放器、识别引擎和翻译引擎，首次使用按硬件自动下载合适的模型；以后的新版本在程序里一键升级。</p>
       <div class="dl-grid">
-        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.5.2 · 安装包约 132MB</small></div></a>
+        <a class="dl" id="dlWin" href="#"><div class="ic">🪟</div><div><b data-i18n="d.win">Windows 桌面版</b><small data-i18n="d.winS">v1.5.3 · 安装包约 132MB</small></div></a>
         <a class="dl" id="dlEmby" href="#"><div class="ic">📺</div><div><b data-i18n="d.emby">Emby 插件</b><small data-i18n="d.embyS">v1.2.0 · Linux / Docker / NAS / Windows</small></div></a>
       </div>
       <p class="req" data-i18n="d.req">Windows 10 / 11 64 位 · 有独立显卡更快（NVIDIA / AMD / Intel 均可），没有也能用 · 所有历史版本见 GitHub Releases</p>
@@ -487,7 +487,7 @@ footer a:hover { color: var(--fg); }
       <details class="reveal"><summary data-i18n="faq.2q">没有显卡能用吗？</summary><p data-i18n="faq.2d">可以。程序启动时会检测硬件并推荐配置：8 核以上 CPU 边播边译基本流畅；较弱的 CPU 建议先用"整片生成"提前做好字幕。</p></details>
       <details class="reveal"><summary data-i18n="faq.3q">会上传我的视频吗？</summary><p data-i18n="faq.3a">不会。默认的识别和翻译都在本机完成。只有你主动选择 DeepSeek 等在线翻译接口时，才会把字幕文字（不是视频和声音）发给对应的服务。</p></details>
       <details class="reveal"><summary data-i18n="faq.4q">翻译质量怎么样？</summary><p data-i18n="faq.4a">内置的腾讯混元 Hy-MT2 是专门的翻译模型，日常对白通顺；追求更好的人名、俚语和长句，可以换成混元 7B 或 DeepSeek API（一部电影大约几毛钱）。</p></details>
-      <details class="reveal"><summary data-i18n="faq.5q">生成的字幕能给别的播放器用吗？</summary><p data-i18n="faq.5a">可以。字幕以 影片名.语言.srt 保存在视频旁边，PotPlayer、VLC、mpv、Emby、Plex 都能直接加载；也可以设为隐藏文件，文件夹更整洁。</p></details>
+      <details class="reveal"><summary data-i18n="faq.5q">生成的字幕能给别的播放器用吗？</summary><p data-i18n="faq.5a">可以。默认把字幕内嵌进 .mkv / .mp4 视频，作为可以随时开关的字幕轨（译文 + 原文两条），PotPlayer、VLC、mpv、Emby、Plex 都能直接显示；其他格式或者你选择另存时，以 影片名.语言.srt 保存在视频旁边。</p></details>
       <details class="reveal"><summary data-i18n="faq.6q">怎么升级到新版本？</summary><p data-i18n="faq.6a">主菜单 →「关于 / 检查更新…」→「检查更新」，有新版本时点「下载并安装」即可：安装包会自动校验，装好后程序自动重新打开。也可以随时从本页下载最新安装包，直接覆盖安装。</p></details>
       <details class="reveal"><summary data-i18n="faq.7q">「边播边译」改名了吗？</summary><p data-i18n="faq.7a">是的，从 1.5.2 起中文名改为「快译全能播放器」，英文名仍是 Navo Player。从 1.5.1 升级时直接安装新版，设置、播放记录、截图和已下载的模型会自动迁移；之后可以在 Windows「设置 → 应用」里卸载旧的「边播边译」。</p></details>
     </div>
@@ -512,7 +512,7 @@ footer a:hover { color: var(--fg); }
 const EN = {
   "brand": "Navo Player",
   "nav.features": "Features", "nav.how": "How it works", "nav.emby": "Emby plugin", "nav.faq": "FAQ", "nav.download": "Download",
-  "hero.pill": "v1.5.2: new icon · one-click online updates · smoother wheel volume",
+  "hero.pill": "v1.5.3: subtitles embedded in the video · voice boost / deep bass / surround · color boost · faster start",
   "hero.t1": "The player that", "hero.t2": "generates subtitles in real time.",
   "hero.sub": "Open a video and just watch: on-device AI listens to the dialogue and translates it into subtitles, buffering 3 minutes ahead. No uploads, no subscription, works offline.",
   "hero.cta": "Download free for Windows", "hero.more": "See what it does",
@@ -566,14 +566,14 @@ const EN = {
   "e.r3t": "Chinese movies", "e.r3d": "Skipped. Every rule is configurable in the settings page",
   "d.eyebrow": "Download", "d.title": "Make every video speak your language — today",
   "d.lead": "Free forever for personal use. The installer includes the player and both AI engines; the right models are downloaded for your hardware on first use, and future versions update in one click from inside the app.",
-  "d.win": "Windows desktop app", "d.winS": "v1.5.2 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
+  "d.win": "Windows desktop app", "d.winS": "v1.5.3 · installer ~132 MB", "d.emby": "Emby plugin", "d.embyS": "v1.2.0 · Linux / Docker / NAS / Windows",
   "d.req": "Windows 10 / 11 64-bit · a dedicated GPU makes it faster (NVIDIA / AMD / Intel), but it isn't required · all versions on GitHub Releases",
   "faq.eyebrow": "FAQ", "faq.title": "Questions you might have",
   "faq.1q": "Is it really free? What's the catch?", "faq.1a": "Completely free for personal use — no ads, no account, no time limits. Any commercial use is prohibited (including internal use at a company, use in a paid service, resale or redistribution in a bundle).",
   "faq.2q": "Do I need a graphics card?", "faq.2d": "No. It checks your hardware on first start and picks settings: an 8-core-plus CPU handles live translation fine; on weaker CPUs, generate whole-film subtitles ahead of time.",
   "faq.3q": "Are my videos uploaded?", "faq.3a": "No. By default recognition and translation happen on your PC. Only if you choose an online API like DeepSeek is subtitle text (never video or audio) sent to that service.",
   "faq.4q": "How good is the translation?", "faq.4a": "The built-in Tencent Hunyuan Hy-MT2 is a dedicated translation model and handles everyday dialogue well. For better names, slang and long sentences, switch to Hunyuan 7B or the DeepSeek API (a few cents per movie).",
-  "faq.5q": "Can other players use the subtitles?", "faq.5a": "Yes. They're saved next to the video as name.language.srt, which PotPlayer, VLC, mpv, Emby and Plex load directly. You can also mark them hidden to keep folders tidy.",
+  "faq.5q": "Can other players use the subtitles?", "faq.5a": "Yes. By default they go inside .mkv / .mp4 videos as switchable subtitle tracks (translation + original), which PotPlayer, VLC, mpv, Emby and Plex show directly. Other formats, or if you choose to, get name.language.srt next to the video.",
   "faq.6q": "How do I update?", "faq.6a": "Main menu → \"About / Check for updates…\" → \"Check for updates\", then \"Download and install\" when a new version is available. The installer is verified and the player reopens when it's done. You can also download the latest installer from this page and install over the top.",
   "faq.7q": "Did the app get a new name?", "faq.7a": "Its Chinese name changed from 边播边译 to 快译全能播放器 in 1.5.2; the English name is still Navo Player. When upgrading from 1.5.1, just install the new version — settings, history, screenshots and downloaded models move over automatically. Afterwards you can uninstall the old \"边播边译 Navo Player\" entry in Windows Settings → Apps.",
   "lic.okT": "You may", "lic.ok1": "Install and use it free on your own computers", "lic.ok2": "Create and keep subtitles for personal viewing", "lic.ok3": "Use the Emby plugin on your home media server",
