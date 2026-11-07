@@ -9,9 +9,9 @@
 🌐 **官网 / Website:** https://thundom.github.io/navo-player/
 ⬇️ **下载 / Download:** [Releases](../../releases/latest)
 
-**最新版 / Latest: [v1.8.3](../../releases/tag/v1.8.3)** — 修复跨硬盘模型目录链接访问失败时误触发下载的问题。设置中可直接选择模型的实际文件夹，语音识别、人声检测和翻译模型统一使用，保存后重新打开生效。旧版可从主菜单「关于 / 检查更新…」一键升级。
+**最新版 / Latest: [v1.8.4](../../releases/tag/v1.8.4)** — 默认先播放视频、手动生成字幕。画面或字幕信息区右键 →「开始翻译生成字幕」后才加载模型，并保持播放位置；设置里的字幕规则下可切换为「自动开启符合条件的生成字幕」。旧版可从主菜单「关于 / 检查更新…」一键升级。
 
-Fixes access to model folders moved to another drive. Select the actual model folder in Settings and restart; ASR, VAD and local translation share it. Translation stop/resume, retranslating the current video and timed shutdown remain available. Existing users can update from **About / Check for updates…**.
+Videos now play first with manual subtitle generation by default. Right-click the picture or subtitle status → **Start translation and subtitles** to load the models without restarting playback. An automatic mode following the language rules is available below the subtitle rules in Settings. Existing users can update from **About / Check for updates…**.
 
 | | |
 |---|---|
