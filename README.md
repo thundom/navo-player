@@ -9,9 +9,9 @@
 🌐 **官网 / Website:** https://thundom.github.io/navo-player/
 ⬇️ **下载 / Download:** [Releases](../../releases/latest)
 
-**最新版 / Latest: [v1.8.2](../../releases/tag/v1.8.2)** — 翻译状态区域右键停止／继续、重新翻译当前视频，退出后可定时释放翻译模型。旧版可从主菜单「关于 / 检查更新…」一键升级。
+**最新版 / Latest: [v1.8.3](../../releases/tag/v1.8.3)** — 修复跨硬盘模型目录链接访问失败时误触发下载的问题。设置中可直接选择模型的实际文件夹，语音识别、人声检测和翻译模型统一使用，保存后重新打开生效。旧版可从主菜单「关于 / 检查更新…」一键升级。
 
-Right-click the translation status to stop/resume or retranslate the current video, and set when to unload the translation model after closing. Existing users can update from **About / Check for updates…**.
+Fixes access to model folders moved to another drive. Select the actual model folder in Settings and restart; ASR, VAD and local translation share it. Translation stop/resume, retranslating the current video and timed shutdown remain available. Existing users can update from **About / Check for updates…**.
 
 | | |
 |---|---|
