@@ -9,6 +9,10 @@
 🌐 **官网 / Website:** https://thundom.github.io/navo-player/
 ⬇️ **下载 / Download:** [Releases](../../releases/latest)
 
+**最新版 / Latest: [v1.8.2](../../releases/tag/v1.8.2)** — 翻译状态区域右键停止／继续、重新翻译当前视频，退出后可定时释放翻译模型。旧版可从主菜单「关于 / 检查更新…」一键升级。
+
+Right-click the translation status to stop/resume or retranslate the current video, and set when to unload the translation model after closing. Existing users can update from **About / Check for updates…**.
+
 | | |
 |---|---|
 | 🪟 Windows 桌面版 / desktop app | `NavoPlayer-Setup.exe` |
